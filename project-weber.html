@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>270 Spadina Rd E — Slate Craftsmen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        heading: ['Geist', 'system-ui', 'sans-serif'],
+        mono:    ['Geist Mono', 'monospace'],
+        body:    ['Geist', 'system-ui', 'sans-serif'],
+      },
+      colors: {
+        gold:      '#F8C748',
+        'gold-dk': '#e8b830',
+        dark:      '#000000',
+        'dark-2':  '#0d0d0d',
+        'light-bg':'#f0f0f0',
+        'card-bg': '#e6e6e6',
+      },
+      letterSpacing: {
+        tightest: '-0.03em',
+        tighter:  '-0.025em',
+        tight:    '-0.02em',
+        mono:     '0.14em',
+        wide:     '0.18em',
+      },
+    },
+  },
+}
+</script>
+<style>
+  body { -webkit-font-smoothing: antialiased; font-size: 16px; letter-spacing: -0.01em; line-height: 1.5; }
+  .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  .btn-slide { position: relative; overflow: hidden; display: inline-block; transition: color 0.32s ease; }
+  .btn-slide::before {
+    content: ''; position: absolute; inset: 0;
+    transform: translateX(-101%);
+    transition: transform 0.32s cubic-bezier(0.4,0,0.2,1); z-index: 0;
+  }
+  .btn-slide:hover::before { transform: translateX(0); }
+  .btn-slide > span { position: relative; z-index: 1; }
+  .btn-gold::before    { background: #F8C748; }
+  .btn-gold:hover      { color: #000 !important; border-color: #F8C748 !important; }
+  .btn-dark::before    { background: #111; }
+  .btn-dark:hover      { color: #fff !important; }
+</style>
+</head>
+<body class="bg-dark text-[#f0f0f0] font-body overflow-x-hidden">
+
+<!-- NAV -->
+<nav id="mainNav" class="fixed top-0 left-0 right-0 z-50 border-b border-white/0 transition-all duration-300">
+  <div class="flex items-center justify-between px-6 md:px-10 py-4">
+    <a href="index.html" class="flex-shrink-0">
+      <img src="Slate_Craftsmen_Logo_Design_Winner__dark_grey_background_.jpeg" alt="Slate Craftsmen" class="h-9 w-auto block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <span class="hidden items-center font-mono text-sm font-medium tracking-[1px] uppercase text-white">Slate Craftsmen</span>
+    </a>
+    <a href="index.html#projects" class="font-mono text-sm tracking-[1px] uppercase text-white/60 hover:text-white transition-colors">&#8592; All Projects</a>
+    <a href="index.html#contact" class="btn-slide btn-gold font-mono text-sm font-medium tracking-[1px] uppercase px-6 py-3 border border-white/30 text-white"><span>Get In Touch</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="relative flex items-center overflow-hidden" style="min-height:85vh; background:#111;">
+  <img class="absolute inset-0 w-full h-full object-cover" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1920&q=80" alt="270 Spadina Rd E" style="opacity:0.28;" onerror="this.style.display='none';">
+  <div class="absolute inset-0 pointer-events-none" style="background-image:repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(255,255,255,0.024) 80px),repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(255,255,255,0.024) 80px);background-size:80px 80px;"></div>
+  <div class="absolute inset-0" style="background:linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.1) 100%);"></div>
+  <div class="relative z-10 w-full px-6 md:px-10 pt-28 pb-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center fade-up">
+      <div>
+        <p class="font-mono text-sm tracking-[1px] uppercase text-white/50 mb-6">Project [002] — Kitchener, Ontario</p>
+        <h1 class="font-heading font-medium text-white tracking-tightest leading-[1.05] mb-8" style="font-size:clamp(40px,5vw,72px);">270 Spadina Rd E</h1>
+        <div class="w-12 h-px bg-white/25 mb-8"></div>
+        <div class="flex flex-col gap-5">
+          <div>
+            <p class="font-mono text-sm tracking-[1px] uppercase text-white/40 mb-1">Location</p>
+            <p class="font-body text-white text-lg">Kitchener, Ontario</p>
+          </div>
+          <div>
+            <p class="font-mono text-sm tracking-[1px] uppercase text-white/40 mb-1">Scope</p>
+            <p class="font-body text-white text-lg">103 units — Large-Scale Renovation</p>
+          </div>
+          <div>
+            <p class="font-mono text-sm tracking-[1px] uppercase text-white/40 mb-1">Status</p>
+            <p class="font-body text-white text-lg">Completed</p>
+          </div>
+        </div>
+      </div>
+      <div class="hidden md:flex items-center justify-end">
+        <div class="w-[85%] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.7)]" style="aspect-ratio:3/4;">
+          <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80" alt="270 Spadina Rd E" class="w-full h-full object-cover block">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OVERVIEW -->
+<section class="bg-light-bg px-6 md:px-10 py-16 md:py-24 fade-up">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
+    <div>
+      <p class="font-mono text-sm tracking-[1px] uppercase text-black/40 mb-6">// The Challenge</p>
+      <h2 class="font-heading font-medium text-[#111] tracking-tightest leading-[1.1]" style="font-size:clamp(24px,2.8vw,36px);">Orchestrating a large-scale renovation across 103 occupied units — the most complex multi-family project Slate has delivered to date.</h2>
+    </div>
+    <div class="md:pt-12">
+      <p class="font-body text-black/60">Slate Craftsmen was brought in to manage the full renovation of 270 Spadina Rd E, a 103-unit mid-rise residential building in Kitchener. The scale and complexity of this project required a highly systematised approach — running multiple units simultaneously while maintaining rigorous quality control and minimising tenant disruption. Our team managed all design coordination, permit issuance, municipal approvals, sub-metering, and construction management from start to finish. The result was a fully modernised building delivered on schedule and within budget.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="bg-dark px-6 md:px-10 py-16 md:py-24 fade-up">
+  <div class="flex flex-col sm:flex-row justify-between items-start gap-4 pb-10 mb-10 border-b border-white/[0.09]">
+    <div>
+      <p class="font-mono text-sm tracking-[1px] uppercase text-gold mb-5">// Results</p>
+      <h2 class="font-heading font-medium text-white tracking-tightest leading-[1.1]" style="font-size:clamp(24px,2.8vw,36px);">The largest project in Slate's history — 103 units delivered without compromise.</h2>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/[0.07]">
+    <!-- Card 1: White -->
+    <div class="bg-white p-8 md:p-10 flex flex-col justify-between min-h-[280px]">
+      <p class="font-mono text-sm tracking-[1px] uppercase text-black/40 mb-6">Units Renovated</p>
+      <div>
+        <div class="font-heading font-medium text-[#111] tracking-tightest leading-none mb-4" style="font-size:clamp(48px,6vw,80px);">103</div>
+        <p class="font-body text-black/60">Units fully renovated across the entire building</p>
+      </div>
+    </div>
+    <!-- Card 2: Dark -->
+    <div class="bg-[#111] p-8 md:p-10 flex flex-col justify-between min-h-[280px]">
+      <p class="font-mono text-sm tracking-[1px] uppercase text-white/40 mb-6">Delivery</p>
+      <div>
+        <div class="font-heading font-medium text-white tracking-tightest leading-none mb-4" style="font-size:clamp(48px,6vw,80px);">100%</div>
+        <p class="font-body text-white/60">On-time and on-budget delivery</p>
+      </div>
+    </div>
+    <!-- Card 3: Gold -->
+    <div class="bg-gold p-8 md:p-10 flex flex-col justify-between min-h-[280px]">
+      <p class="font-mono text-sm tracking-[1px] uppercase text-black/40 mb-6">Rental Yield</p>
+      <div>
+        <div class="font-heading font-medium text-black tracking-tightest leading-none mb-4" style="font-size:clamp(48px,6vw,80px);">&#8593;22%</div>
+        <p class="font-body text-black/60">Estimated rental yield improvement post-renovation</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSION -->
+<section class="bg-light-bg px-6 md:px-10 py-16 md:py-24 fade-up">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+    <div>
+      <h2 class="font-heading font-medium text-[#111] tracking-tightest leading-[1.1] mb-7" style="font-size:clamp(26px,3vw,40px);">A landmark renovation that set a new benchmark for Slate Craftsmen.</h2>
+      <p class="font-body text-black/60">The 270 Spadina Rd E project is a testament to Slate's ability to scale without sacrificing quality. Managing 103 units simultaneously required exceptional coordination between our site teams, sub-trades, and client stakeholders. The project has since been used as a model for how large-scale occupied renovations can be delivered efficiently and to a premium standard.</p>
+    </div>
+    <div class="overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.12)]" style="aspect-ratio:4/3;">
+      <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1000&q=80" alt="270 Spadina Rd E completion" class="w-full h-full object-cover block">
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="bg-gold px-6 md:px-10 py-16 md:py-24 fade-up">
+  <div class="max-w-3xl mx-auto text-center">
+    <p class="font-heading font-medium text-black tracking-tightest leading-[1.15] mb-8" style="font-size:clamp(22px,2.8vw,36px);">"From planning through to completion, Slate were a reliable and proactive partner on a complex multi-phase renovation project."</p>
+    <div>
+      <p class="font-mono text-sm tracking-[1px] uppercase text-black font-medium mb-1">Sarah Mitchell</p>
+      <p class="font-mono text-sm tracking-[1px] uppercase text-black/60">Head of Property, UrbanCore</p>
+    </div>
+  </div>
+</section>
+
+<!-- BACK BAR -->
+<section class="bg-dark px-6 md:px-10 py-16 md:py-20 text-center fade-up">
+  <a href="index.html#projects" class="btn-slide btn-dark font-mono text-sm font-medium tracking-[1px] uppercase px-8 py-4 border border-white/20 text-white"><span>&#8592; Back to all projects</span></a>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-dark px-6 md:px-10 py-8 border-t border-white/[0.09]">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+    <span class="font-body text-[13px] text-white/40">&#169; 2026 Slate Craftsmen. All rights reserved.</span>
+    <span class="font-body text-[13px] text-white/40">Kitchener-Waterloo, Ontario</span>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) {
+      nav.style.background = 'rgba(0,0,0,0.95)';
+      nav.style.backdropFilter = 'blur(16px)';
+      nav.style.borderBottom = '1px solid rgba(255,255,255,0.09)';
+    } else {
+      nav.style.background = 'transparent';
+      nav.style.backdropFilter = 'none';
+      nav.style.borderBottom = 'none';
+    }
+  });
+
+  // Fade-up observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
