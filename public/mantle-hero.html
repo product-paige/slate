@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mantle — Business Layer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0f0d17;
+      font-family: 'Geist', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+    }
+
+    .hero {
+      width: 100%;
+      max-width: 1360px;
+      background: #1A1825;
+      border-radius: 16px;
+      padding: 44px 60px 40px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Decorative dot-wave patterns ── */
+    .dots {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 200px;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    .dots-left  { left: 0; }
+    .dots-right { right: 0; transform: scaleX(-1); }
+
+    /* ── Badge ── */
+    .badge-wrap { text-align: center; margin-bottom: 20px; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #252232;
+      border-radius: 99px;
+      padding: 7px 18px 7px 7px;
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.13em;
+      color: #A89070;
+    }
+    .badge-icon {
+      width: 26px;
+      height: 26px;
+      background: #D4A234;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1A1825;
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── Headline ── */
+    .headline {
+      text-align: center;
+      font-family: 'Manrope', sans-serif;
+      font-size: 86px;
+      font-weight: 500;
+      line-height: 1.03;
+      color: #F0E6C8;
+      letter-spacing: -0.025em;
+      margin-bottom: 0;
+    }
+    .headline .gold { color: #D4A234; }
+
+    /* ── Tree SVG ── */
+    .tree-svg {
+      display: block;
+      width: 100%;
+      overflow: visible;
+      flex-shrink: 0;
+    }
+
+    /* ── Cards ── */
+    .cards-row {
+      display: flex;
+      gap: 9px;
+      flex: 1;
+    }
+
+    .card {
+      flex: 1;
+      background: linear-gradient(160deg, #C08A1A 0%, #A07010 100%);
+      border: 1.5px solid rgba(212,162,52,0.3);
+      border-radius: 14px;
+      padding: 16px 12px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .card-name {
+      font-family: 'Manrope', sans-serif;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1A1420;
+      margin-bottom: 5px;
+      letter-spacing: -0.01em;
+    }
+
+    .card-desc {
+      font-family: 'Geist', sans-serif;
+      font-size: 11.5px;
+      color: rgba(0,0,0,0.5);
+      line-height: 1.45;
+      font-weight: 400;
+    }
+
+    /* ── Bottom label ── */
+    .bottom-label {
+      text-align: center;
+      margin-top: 16px;
+      font-family: 'Geist', sans-serif;
+      font-size: 10.5px;
+      letter-spacing: 0.18em;
+      color: #D4A234;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+    .bottom-label::before,
+    .bottom-label::after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 1.5px;
+      background: #D4A234;
+      opacity: 0.45;
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+
+  <!-- Dot wave — left -->
+  <svg class="dots dots-left" viewBox="0 0 220 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="dfl" cx="0%" cy="50%" r="100%">
+        <stop offset="0%" stop-color="#D4A234" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#D4A234" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <g fill="#D4A234" opacity="0.3">
+      <circle cx="10" cy="80" r="2"/><circle cx="10" cy="104" r="2"/><circle cx="10" cy="128" r="2"/><circle cx="10" cy="152" r="2"/><circle cx="10" cy="176" r="2"/><circle cx="10" cy="200" r="2"/><circle cx="10" cy="224" r="2"/><circle cx="10" cy="248" r="2"/><circle cx="10" cy="272" r="2"/><circle cx="10" cy="296" r="2"/><circle cx="10" cy="320" r="2"/><circle cx="10" cy="344" r="2"/><circle cx="10" cy="368" r="2"/><circle cx="10" cy="392" r="2"/><circle cx="10" cy="416" r="2"/><circle cx="10" cy="440" r="2"/><circle cx="10" cy="464" r="2"/><circle cx="10" cy="488" r="2"/><circle cx="10" cy="512" r="2"/><circle cx="10" cy="536" r="2"/>
+      <circle cx="34" cy="56" r="2"/><circle cx="34" cy="80" r="2"/><circle cx="34" cy="104" r="2"/><circle cx="34" cy="128" r="2"/><circle cx="34" cy="152" r="2"/><circle cx="34" cy="176" r="2"/><circle cx="34" cy="200" r="2"/><circle cx="34" cy="224" r="2"/><circle cx="34" cy="248" r="2"/><circle cx="34" cy="272" r="2"/><circle cx="34" cy="296" r="2"/><circle cx="34" cy="320" r="2"/><circle cx="34" cy="344" r="2"/><circle cx="34" cy="368" r="2"/><circle cx="34" cy="392" r="2"/><circle cx="34" cy="416" r="2"/><circle cx="34" cy="440" r="2"/><circle cx="34" cy="464" r="2"/>
+      <circle cx="58" cy="40" r="2"/><circle cx="58" cy="64" r="2"/><circle cx="58" cy="88" r="2"/><circle cx="58" cy="112" r="2"/><circle cx="58" cy="136" r="2"/><circle cx="58" cy="160" r="2"/><circle cx="58" cy="184" r="2"/><circle cx="58" cy="208" r="2"/><circle cx="58" cy="232" r="2"/><circle cx="58" cy="256" r="2"/><circle cx="58" cy="280" r="2"/><circle cx="58" cy="304" r="2"/><circle cx="58" cy="328" r="2"/><circle cx="58" cy="352" r="2"/><circle cx="58" cy="376" r="2"/><circle cx="58" cy="400" r="2"/><circle cx="58" cy="424" r="2"/>
+      <circle cx="82" cy="32" r="2"/><circle cx="82" cy="56" r="2"/><circle cx="82" cy="80" r="2"/><circle cx="82" cy="104" r="2"/><circle cx="82" cy="128" r="2"/><circle cx="82" cy="152" r="2"/><circle cx="82" cy="176" r="2"/><circle cx="82" cy="200" r="2"/><circle cx="82" cy="224" r="2"/><circle cx="82" cy="248" r="2"/><circle cx="82" cy="272" r="2"/><circle cx="82" cy="296" r="2"/><circle cx="82" cy="320" r="2"/><circle cx="82" cy="344" r="2"/><circle cx="82" cy="368" r="2"/><circle cx="82" cy="392" r="2"/>
+      <circle cx="106" cy="48" r="2"/><circle cx="106" cy="72" r="2"/><circle cx="106" cy="96" r="2"/><circle cx="106" cy="120" r="2"/><circle cx="106" cy="144" r="2"/><circle cx="106" cy="168" r="2"/><circle cx="106" cy="192" r="2"/><circle cx="106" cy="216" r="2"/><circle cx="106" cy="240" r="2"/><circle cx="106" cy="264" r="2"/><circle cx="106" cy="288" r="2"/><circle cx="106" cy="312" r="2"/><circle cx="106" cy="336" r="2"/><circle cx="106" cy="360" r="2"/>
+      <circle cx="130" cy="72" r="2"/><circle cx="130" cy="96" r="2"/><circle cx="130" cy="120" r="2"/><circle cx="130" cy="144" r="2"/><circle cx="130" cy="168" r="2"/><circle cx="130" cy="192" r="2"/><circle cx="130" cy="216" r="2"/><circle cx="130" cy="240" r="2"/><circle cx="130" cy="264" r="2"/><circle cx="130" cy="288" r="2"/><circle cx="130" cy="312" r="2"/>
+    </g>
+    <rect width="220" height="700" fill="url(#dfl)"/>
+  </svg>
+
+  <!-- Dot wave — right -->
+  <svg class="dots dots-right" viewBox="0 0 220 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="dfr" cx="0%" cy="50%" r="100%">
+        <stop offset="0%" stop-color="#D4A234" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#D4A234" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <g fill="#D4A234" opacity="0.3">
+      <circle cx="10" cy="80" r="2"/><circle cx="10" cy="104" r="2"/><circle cx="10" cy="128" r="2"/><circle cx="10" cy="152" r="2"/><circle cx="10" cy="176" r="2"/><circle cx="10" cy="200" r="2"/><circle cx="10" cy="224" r="2"/><circle cx="10" cy="248" r="2"/><circle cx="10" cy="272" r="2"/><circle cx="10" cy="296" r="2"/><circle cx="10" cy="320" r="2"/><circle cx="10" cy="344" r="2"/><circle cx="10" cy="368" r="2"/><circle cx="10" cy="392" r="2"/><circle cx="10" cy="416" r="2"/><circle cx="10" cy="440" r="2"/><circle cx="10" cy="464" r="2"/><circle cx="10" cy="488" r="2"/><circle cx="10" cy="512" r="2"/><circle cx="10" cy="536" r="2"/>
+      <circle cx="34" cy="56" r="2"/><circle cx="34" cy="80" r="2"/><circle cx="34" cy="104" r="2"/><circle cx="34" cy="128" r="2"/><circle cx="34" cy="152" r="2"/><circle cx="34" cy="176" r="2"/><circle cx="34" cy="200" r="2"/><circle cx="34" cy="224" r="2"/><circle cx="34" cy="248" r="2"/><circle cx="34" cy="272" r="2"/><circle cx="34" cy="296" r="2"/><circle cx="34" cy="320" r="2"/><circle cx="34" cy="344" r="2"/><circle cx="34" cy="368" r="2"/><circle cx="34" cy="392" r="2"/><circle cx="34" cy="416" r="2"/><circle cx="34" cy="440" r="2"/><circle cx="34" cy="464" r="2"/>
+      <circle cx="58" cy="40" r="2"/><circle cx="58" cy="64" r="2"/><circle cx="58" cy="88" r="2"/><circle cx="58" cy="112" r="2"/><circle cx="58" cy="136" r="2"/><circle cx="58" cy="160" r="2"/><circle cx="58" cy="184" r="2"/><circle cx="58" cy="208" r="2"/><circle cx="58" cy="232" r="2"/><circle cx="58" cy="256" r="2"/><circle cx="58" cy="280" r="2"/><circle cx="58" cy="304" r="2"/><circle cx="58" cy="328" r="2"/><circle cx="58" cy="352" r="2"/><circle cx="58" cy="376" r="2"/><circle cx="58" cy="400" r="2"/><circle cx="58" cy="424" r="2"/>
+      <circle cx="82" cy="32" r="2"/><circle cx="82" cy="56" r="2"/><circle cx="82" cy="80" r="2"/><circle cx="82" cy="104" r="2"/><circle cx="82" cy="128" r="2"/><circle cx="82" cy="152" r="2"/><circle cx="82" cy="176" r="2"/><circle cx="82" cy="200" r="2"/><circle cx="82" cy="224" r="2"/><circle cx="82" cy="248" r="2"/><circle cx="82" cy="272" r="2"/><circle cx="82" cy="296" r="2"/><circle cx="82" cy="320" r="2"/><circle cx="82" cy="344" r="2"/><circle cx="82" cy="368" r="2"/><circle cx="82" cy="392" r="2"/>
+      <circle cx="106" cy="48" r="2"/><circle cx="106" cy="72" r="2"/><circle cx="106" cy="96" r="2"/><circle cx="106" cy="120" r="2"/><circle cx="106" cy="144" r="2"/><circle cx="106" cy="168" r="2"/><circle cx="106" cy="192" r="2"/><circle cx="106" cy="216" r="2"/><circle cx="106" cy="240" r="2"/><circle cx="106" cy="264" r="2"/><circle cx="106" cy="288" r="2"/><circle cx="106" cy="312" r="2"/><circle cx="106" cy="336" r="2"/><circle cx="106" cy="360" r="2"/>
+      <circle cx="130" cy="72" r="2"/><circle cx="130" cy="96" r="2"/><circle cx="130" cy="120" r="2"/><circle cx="130" cy="144" r="2"/><circle cx="130" cy="168" r="2"/><circle cx="130" cy="192" r="2"/><circle cx="130" cy="216" r="2"/><circle cx="130" cy="240" r="2"/><circle cx="130" cy="264" r="2"/><circle cx="130" cy="288" r="2"/><circle cx="130" cy="312" r="2"/>
+    </g>
+    <rect width="220" height="700" fill="url(#dfr)"/>
+  </svg>
+
+  <!-- Badge -->
+  <div class="badge-wrap">
+    <div class="badge">
+      <div class="badge-icon">M</div>
+      POWERED BY MANTLE AI
+    </div>
+  </div>
+
+  <!-- Headline -->
+  <div class="headline">
+    <div>Mantle is the</div>
+    <div class="gold">business layer</div>
+    <div>for your app.</div>
+  </div>
+
+  <!-- Tree SVG -->
+  <svg class="tree-svg" viewBox="0 0 1240 120" height="120" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 620,6 C 620,70 73.6,70 73.6,112"  stroke="#D4A234" stroke-width="1.3" fill="none" opacity="0.7"/>
+    <path d="M 620,6 C 620,70 229.7,70 229.7,112" stroke="#D4A234" stroke-width="1.3" fill="none" opacity="0.7"/>
+    <path d="M 620,6 C 620,70 385.8,70 385.8,112" stroke="#D4A234" stroke-width="1.3" fill="none" opacity="0.7"/>
+    <path d="M 620,6 C 620,70 541.9,70 541.9,112" stroke="#D4A234" stroke-width="1.3" fill="none" opacity="0.7"/>
+    <path d="M 620,6 C 620,70 698.1,70 698.1,112" stroke="#D4A234" stroke-width="1.3" fill="none" opacity="0.7"/>
+    <path d="M 620,6 C 620,70 854.2,70 854.2,112" stroke="#D4A234" stroke-width="1.3" fill="none" opacity="0.7"/>
+    <path d="M 620,6 C 620,70 1010.3,70 1010.3,112" stroke="#D4A234" stroke-width="1.3" fill="none" opacity="0.7"/>
+    <path d="M 620,6 C 620,70 1166.4,70 1166.4,112" stroke="#D4A234" stroke-width="1.3" fill="none" opacity="0.7"/>
+    <rect x="614"    y="0"   width="12" height="12" rx="2.5" fill="#D4A234"/>
+    <rect x="67.6"   y="106" width="12" height="12" rx="2.5" fill="#D4A234"/>
+    <rect x="223.7"  y="106" width="12" height="12" rx="2.5" fill="#D4A234"/>
+    <rect x="379.8"  y="106" width="12" height="12" rx="2.5" fill="#D4A234"/>
+    <rect x="535.9"  y="106" width="12" height="12" rx="2.5" fill="#D4A234"/>
+    <rect x="692.1"  y="106" width="12" height="12" rx="2.5" fill="#D4A234"/>
+    <rect x="848.2"  y="106" width="12" height="12" rx="2.5" fill="#D4A234"/>
+    <rect x="1004.3" y="106" width="12" height="12" rx="2.5" fill="#D4A234"/>
+    <rect x="1160.4" y="106" width="12" height="12" rx="2.5" fill="#D4A234"/>
+  </svg>
+
+  <!-- Cards -->
+  <div class="cards-row">
+    <div class="card"><div class="card-name">Customers</div><div class="card-desc">Profiles, lifecycle, segmentation</div></div>
+    <div class="card"><div class="card-name">Billing</div><div class="card-desc">Pricing, subscriptions, payments</div></div>
+    <div class="card"><div class="card-name">Messaging</div><div class="card-desc">Lifecycle, campaigns, email</div></div>
+    <div class="card"><div class="card-name">Analytics</div><div class="card-desc">Acquisition, retention, revenue</div></div>
+    <div class="card"><div class="card-name">Automations</div><div class="card-desc">Triggers, workflows, routing</div></div>
+    <div class="card"><div class="card-name">Sales</div><div class="card-desc">Leads, pipeline, conversion</div></div>
+    <div class="card"><div class="card-name">Partnerships</div><div class="card-desc">Affiliates, referrals, distribution</div></div>
+    <div class="card"><div class="card-name">Support</div><div class="card-desc">Tickets, help docs, responses</div></div>
+  </div>
+
+  <!-- Bottom label -->
+  <div class="bottom-label">PRODUCT SYSTEMS. ALL CONNECTED.</div>
+
+</div>
+
+</body>
+</html>

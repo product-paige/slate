@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1440, initial-scale=1">
+  <title>Signals Hero</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #C8BEA8;
+      font-family: 'Manrope', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 48px;
+    }
+    .page {
+      width: 100%;
+      max-width: 1360px;
+      aspect-ratio: 16 / 9;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .svg-lines {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .headline {
+      position: absolute;
+      top: 52px;
+      width: 100%;
+      text-align: center;
+      font-size: 54px;
+      font-weight: 700;
+      color: #18182A;
+      line-height: 1.18;
+      letter-spacing: -0.025em;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .gold { color: #C8850A; }
+    .card {
+      position: absolute;
+      background: rgba(252, 247, 237, 0.88);
+      border-radius: 14px;
+      padding: 15px 20px 18px;
+      box-shadow: 0 3px 28px rgba(20,14,4,0.13), 0 0 0 1px rgba(185,165,120,0.22);
+      font-size: 16px;
+      font-weight: 500;
+      color: #18182A;
+      line-height: 1.38;
+      z-index: 10;
+    }
+    .card-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #C8850A;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Canvas: background + sphere -->
+  <canvas id="c"></canvas>
+
+  <!-- SVG: connection lines -->
+  <svg class="svg-lines" viewBox="0 0 1360 765" fill="none">
+    <!-- Feature requests → sphere -->
+    <path d="M 428 255 C 462 295 492 355 514 412" stroke="#C8850A" stroke-width="1.4" opacity="0.62"/>
+    <circle cx="514" cy="413" r="4.5" fill="#C8850A" opacity="0.95"/>
+
+    <!-- Users stuck → sphere -->
+    <path d="M 958 263 C 912 300 848 340 774 388" stroke="#C8850A" stroke-width="1.4" opacity="0.62"/>
+    <circle cx="773" cy="389" r="4.5" fill="#C8850A" opacity="0.95"/>
+
+    <!-- Comparing → sphere -->
+    <path d="M 274 497 C 306 518 336 538 362 556" stroke="#C8850A" stroke-width="1.4" opacity="0.62"/>
+    <circle cx="363" cy="557" r="4.5" fill="#C8850A" opacity="0.95"/>
+
+    <!-- Confusion → sphere -->
+    <path d="M 1110 522 C 1060 540 985 558 892 569" stroke="#C8850A" stroke-width="1.4" opacity="0.62"/>
+    <circle cx="891" cy="570" r="4.5" fill="#C8850A" opacity="0.95"/>
+
+    <!-- Conversion → sphere (short line) -->
+    <path d="M 672 596 L 670 622" stroke="#C8850A" stroke-width="1.4" opacity="0.62"/>
+    <circle cx="670" cy="623" r="4.5" fill="#C8850A" opacity="0.95"/>
+  </svg>
+
+  <!-- Headline -->
+  <div class="headline">
+    Understand your product<br>through <span class="gold">signals</span>
+  </div>
+
+  <!-- Cards -->
+  <div class="card" style="top:193px; left:244px; width:192px;">
+    <div class="card-dot"></div>
+    What feature requests come up most?
+  </div>
+
+  <div class="card" style="top:198px; left:958px; width:164px;">
+    <div class="card-dot"></div>
+    Where do users get stuck?
+  </div>
+
+  <div class="card" style="top:438px; left:82px; width:193px;">
+    <div class="card-dot"></div>
+    What are people comparing us to?
+  </div>
+
+  <div class="card" style="top:453px; left:1108px; width:192px;">
+    <div class="card-dot"></div>
+    Which steps cause confusion?
+  </div>
+
+  <div class="card" style="top:590px; left:558px; width:228px;">
+    <div class="card-dot"></div>
+    What drives conversion vs drop-off?
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  const W = 1360, H = 765;
+  canvas.width = W;
+  canvas.height = H;
+
+  const SCX = 680, SCY = 742, SR = 482;
+
+  /* --- seeded random --- */
+  let s = 98765;
+  function rnd() {
+    s ^= s << 13; s ^= s >> 17; s ^= s << 5;
+    return (s >>> 0) / 4294967295;
+  }
+
+  /* ── 1. Background ── */
+  ctx.fillStyle = '#EDE5CF';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle grain
+  for (let i = 0; i < 850; i++) {
+    const x = rnd() * W, y = rnd() * H;
+    const r = rnd() * 1.3 + 0.2;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(125,100,55,${rnd() * 0.18 + 0.03})`;
+    ctx.fill();
+  }
+
+  /* ── 2. Sphere glow (halo around sphere) ── */
+  const halo = ctx.createRadialGradient(SCX, SCY - SR * 0.1, SR * 0.82, SCX, SCY, SR * 1.18);
+  halo.addColorStop(0, 'rgba(0,0,0,0)');
+  halo.addColorStop(0.6, 'rgba(0,0,0,0)');
+  halo.addColorStop(1, 'rgba(185,155,90,0.09)');
+  ctx.beginPath();
+  ctx.arc(SCX, SCY, SR * 1.18, 0, Math.PI * 2);
+  ctx.fillStyle = halo;
+  ctx.fill();
+
+  /* ── 3. Sphere base ── */
+  const baseGrad = ctx.createRadialGradient(
+    SCX - SR * 0.27, SCY - SR * 0.32, SR * 0.06,
+    SCX + SR * 0.05, SCY + SR * 0.05, SR * 1.02
+  );
+  baseGrad.addColorStop(0,    '#403870');
+  baseGrad.addColorStop(0.22, '#322C5E');
+  baseGrad.addColorStop(0.50, '#242048');
+  baseGrad.addColorStop(0.78, '#181432');
+  baseGrad.addColorStop(1,    '#0D0A1E');
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(SCX, SCY, SR, 0, Math.PI * 2);
+  ctx.fillStyle = baseGrad;
+  ctx.fill();
+
+  /* ── 4. Sphere particles (clipped) ── */
+  ctx.beginPath();
+  ctx.arc(SCX, SCY, SR, 0, Math.PI * 2);
+  ctx.clip();
+
+  // Light direction (upper-left-front), normalized
+  const lx = -0.38, ly = 0.52, lz = 0.76; // x=canvas-x, y=depth, z=up-in-world
+
+  for (let i = 0; i < 680; i++) {
+    // Uniform on sphere, biased to upper portion (cosTheta near 1 = top)
+    const cosT = 1.0 - rnd() * 1.28; // 1.0 → -0.28
+    const theta = Math.acos(Math.max(-1, Math.min(1, cosT)));
+    const phi   = rnd() * Math.PI * 2;
+
+    const nx = Math.sin(theta) * Math.cos(phi);
+    const ny = Math.sin(theta) * Math.sin(phi); // depth (positive = front)
+    const nz = Math.cos(theta);                  // up in world
+
+    // Canvas position
+    const sx = SCX + nx * SR;
+    const sy = SCY - nz * SR;
+
+    if (sy > H + 4 || sx < 0 || sx > W) continue;
+
+    // Diffuse lighting
+    const diffuse = Math.max(0, nx * lx + ny * ly + nz * lz);
+
+    // Front-facing (ny > 0 = facing viewer)
+    const front = Math.max(0, ny + 0.25) / 1.25;
+
+    const brightness = diffuse * 0.75 + 0.12;
+    const opacity    = Math.min(1, (brightness * 0.85 + rnd() * 0.18) * (0.25 + front * 0.75));
+    const dotR       = (rnd() * 1.9 + 0.35) * (0.35 + brightness * 0.9);
+
+    const R = Math.min(255, Math.floor(185 + brightness * 70));
+    const G = Math.min(255, Math.floor(125 + brightness * 110));
+    const B = Math.min(255, Math.floor(18  + brightness * 38));
+
+    ctx.beginPath();
+    ctx.arc(sx, sy, dotR, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${R},${G},${B},${opacity})`;
+    ctx.fill();
+
+    // Glow for the brighter dots
+    if (diffuse > 0.52 && rnd() > 0.46) {
+      const gr  = dotR * 5;
+      const grd = ctx.createRadialGradient(sx, sy, 0, sx, sy, gr);
+      grd.addColorStop(0, `rgba(${R},${G},${B},${Math.min(0.45, opacity * 0.38)})`);
+      grd.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath();
+      ctx.arc(sx, sy, gr, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    }
+  }
+
+  // Rim darkening at edge
+  const rim = ctx.createRadialGradient(SCX, SCY, SR * 0.72, SCX, SCY, SR);
+  rim.addColorStop(0, 'rgba(0,0,0,0)');
+  rim.addColorStop(0.75, 'rgba(0,0,0,0)');
+  rim.addColorStop(1, 'rgba(5,3,12,0.55)');
+  ctx.fillStyle = rim;
+  ctx.fillRect(SCX - SR, SCY - SR, SR * 2, SR * 2);
+
+  // Top highlight (light sheen from upper-left)
+  const shine = ctx.createRadialGradient(
+    SCX - SR * 0.3, SCY - SR * 0.38, 0,
+    SCX - SR * 0.3, SCY - SR * 0.38, SR * 0.55
+  );
+  shine.addColorStop(0, 'rgba(180,155,90,0.08)');
+  shine.addColorStop(0.5, 'rgba(180,155,90,0.03)');
+  shine.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = shine;
+  ctx.fillRect(SCX - SR, SCY - SR, SR * 2, SR * 2);
+
+  ctx.restore();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,3309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mantle — Use Cases & Systems Directory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* ── Elevation scale (dark canvas, matched to mantle-staging) ── */
+      --canvas:         #0c0a0e;   /* surface-medium */
+      --surface:        #110f14;   /* surface-high */
+      --surface-raised: #16141a;   /* surface-higher */
+      --surface-elev:   #1e1c23;   /* surface-highest */
+
+      /* ── Borders (edge tokens) ── */
+      --border:         #ffffff1c; /* edge-high */
+      --border-soft:    #ffffff12; /* edge-medium */
+      --hairline:       #ffffff08; /* edge-low */
+
+      /* ── Text (fg tokens) ── */
+      --text-primary:   #ffffff;   /* fg-high */
+      --text-secondary: #e2e1eb;   /* fg-medium */
+      --text-muted:     #a2a0b1;   /* fg-low */
+      --text-label:     #5f5d72;   /* fg-lower */
+
+      /* ── Brand accent ── */
+      --gold:           #ffbb53;   /* accent-medium */
+      --gold-dim:       #f5ac3d;   /* accent-low */
+      --gold-high:      #ffc66e;   /* accent-high */
+      --gold-soft:      rgba(255, 187, 83, 0.10);
+      --gold-glow:      rgba(255, 187, 83, 0.16);
+
+      /* ── Radius ── */
+      --r-sm:  8px;
+      --r-md:  0.75rem;
+      --r-lg:  0.75rem;
+
+      /* ── Spacing (8-point) ── */
+      --s-1:  8px;
+      --s-2:  12px;
+      --s-3:  16px;
+      --s-4:  24px;
+      --s-5:  32px;
+      --s-6:  48px;
+
+      /* ── Motion ── */
+      --ease:       cubic-bezier(0.2, 0, 0, 1);
+      --t-fast:     150ms;
+      --t-base:     220ms;
+      --t-slow:     300ms;
+
+      /* ── Layout ── */
+      --header-h:   64px;
+
+      /* ── Type ── */
+      --font-head:  'Manrope', -apple-system, system-ui, sans-serif;
+      --font-body:  'Geist', -apple-system, system-ui, sans-serif;
+      --font-mono:  'Geist Mono', ui-monospace, monospace;
+    }
+
+    /* ── Signature: subtle SVG noise texture ── */
+    /* Applied via pseudo-element; extremely low opacity, barely perceptible. */
+    .grain::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.035;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      background-size: 220px 220px;
+    }
+
+    html, body {
+      background: var(--canvas);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      min-height: 100vh;
+      position: relative;
+      background: var(--canvas);
+    }
+    /* Page-wide grain */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.04;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      background-size: 240px 240px;
+    }
+
+    /* ───────── Site header ───────── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--s-5);
+      border-bottom: 1px solid var(--border-soft);
+      background: linear-gradient(180deg, rgba(11, 9, 16, 0.92), rgba(11, 9, 16, 0.72));
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
+    }
+
+    .site-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-head);
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .site-brand .site-logo {
+      display: block;
+      height: 28px;
+      width: auto;
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--s-5);
+    }
+    .site-nav > a,
+    .nav-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: 400;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+    .site-nav > a:hover,
+    .nav-trigger:hover { color: var(--gold); }
+    .site-nav .chev {
+      width: 10px; height: 10px;
+      stroke: currentColor;
+      opacity: 0.65;
+      transition: transform var(--t-fast) var(--ease);
+    }
+    .nav-group:hover .chev { transform: rotate(180deg); }
+
+    /* ───────── Mega menu ───────── */
+    .nav-group {
+      position: relative;
+    }
+    .mega-menu {
+      position: fixed;
+      left: 50%;
+      top: var(--header-h);
+      transform: translate(-50%, -6px);
+      width: min(1200px, calc(100vw - 48px));
+      background: #15131c;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 12px;
+      box-shadow:
+        0 1px 0 rgba(255,255,255,0.04) inset,
+        0 30px 60px -20px rgba(0,0,0,0.6),
+        0 0 0 1px rgba(255,255,255,0.02);
+      padding: 18px 22px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity var(--t-base) var(--ease) 180ms,
+        transform var(--t-base) var(--ease) 180ms,
+        visibility 0s linear calc(var(--t-base) + 180ms);
+      z-index: 60;
+    }
+    .nav-group:hover .mega-menu,
+    .mega-menu:hover {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+      transition:
+        opacity var(--t-base) var(--ease),
+        transform var(--t-base) var(--ease),
+        visibility 0s linear 0s;
+    }
+    /* Hover bridge — generous invisible strip above the menu so mouse movement stays in hover */
+    .mega-menu::before {
+      content: "";
+      position: absolute;
+      top: -24px;
+      left: -12px;
+      right: -12px;
+      height: 24px;
+    }
+    /* Full-width invisible hover bridge on the nav-group itself, so leaving the trigger
+       briefly doesn't immediately collapse the menu. */
+    .nav-group::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: -20px;
+      right: -20px;
+      height: 24px;
+      pointer-events: none;
+    }
+    .nav-group:hover::after { pointer-events: auto; }
+
+    .mm-grid {
+      display: grid;
+      gap: 48px;
+    }
+    .mm-grid.cols-3      { grid-template-columns: 0.95fr 1.7fr 0.95fr; }
+    .mm-grid.cols-3-card { grid-template-columns: 1fr 1fr 340px; }
+    .mm-grid.cols-3-even { grid-template-columns: 1fr 1fr 1fr; }
+    .mm-grid.cols-4-card { grid-template-columns: 1fr 1fr 1fr 1.1fr; }
+    .mm-grid.cols-4-plat { grid-template-columns: 1fr 1fr 1.5fr 1fr; gap: 32px; }
+    .mm-grid.cols-2-card { grid-template-columns: 1fr 340px; }
+    .mm-grid.cols-2-plat { grid-template-columns: 320px 1fr; gap: 96px; }
+    .mm-grid.cols-4-sol  { grid-template-columns: 1fr 1fr 1fr 340px; gap: 40px; }
+    .mega-menu.mega-menu-xl { width: 1240px; }
+
+    /* Platform menu sized to fit content */
+    .mega-menu.mega-menu-platform {
+      width: min(1060px, calc(100vw - 48px));
+    }
+
+    /* Stacked cards in one column (Platform) */
+    .mm-stack { display: flex; flex-direction: column; gap: 6px; }
+    .mm-stack .mm-section-label { margin-bottom: 8px; }
+
+    /* Kicker + arrow on one row inside call-out cards */
+    .mm-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    /* Slim single-column dropdown (e.g. Use cases) — anchored under its parent */
+    .mega-menu.mega-menu-slim {
+      position: absolute;
+      top: calc(100% + 18px);
+      left: 50%;
+      width: 280px;
+      padding: 18px 22px;
+    }
+    .nav-group:hover .mega-menu.mega-menu-slim,
+    .mega-menu.mega-menu-slim:hover {
+      transform: translate(-50%, 0);
+    }
+    /* Compact width (e.g. Customers) */
+    .mega-menu.mega-menu-compact {
+      width: 780px;
+    }
+    /* Slightly wider for 3-column + card (e.g. Resources / Solutions) */
+    .mega-menu.mega-menu-wide {
+      width: 960px;
+    }
+    .mega-menu-slim .mm-list { gap: 10px; }
+    .mega-menu-slim .mm-item-title { font-size: 18px; }
+
+    .mm-section-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .mm-feature-title {
+      font-family: var(--font-head);
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.018em;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.15;
+    }
+    .mm-feature-sub {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .mm-feature-body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+
+    .mm-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .mm-list.two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 24px;
+    }
+    .mm-item {
+      display: block;
+      cursor: pointer;
+      transition: transform var(--t-fast) var(--ease);
+    }
+    .mm-item:hover { transform: translateX(2px); }
+    .mm-item-title {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      transition: color var(--t-fast) var(--ease);
+    }
+    .mm-item:hover .mm-item-title { color: var(--gold); }
+    .mm-item-sub {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.25;
+      margin-top: 3px;
+    }
+    .mm-badge {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.05rem;
+      color: var(--gold);
+      background: var(--gold-soft);
+      border: 1px solid rgba(255,187,83,0.25);
+      border-radius: 999px;
+      vertical-align: middle;
+      text-transform: uppercase;
+    }
+
+    .mm-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--gold);
+      cursor: pointer;
+      transition: transform var(--t-fast) var(--ease);
+    }
+    .mm-link:hover { transform: translateX(2px); }
+
+    /* Square arrow button — sits inline with eyebrow inside .mm-card-head */
+    .mm-card-arrow {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: color var(--t-fast) var(--ease);
+    }
+    .mm-card-arrow .icon-hover { display: none; }
+    .mm-card:hover .mm-card-arrow { color: var(--gold); }
+    .mm-card:hover .mm-card-arrow .icon-default { display: none; }
+    .mm-card:hover .mm-card-arrow .icon-hover  { display: inline-flex; }
+
+    .mm-card {
+      background: linear-gradient(180deg, #121017 0%, #0a080d 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--r-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color var(--t-fast) var(--ease);
+    }
+    .mm-card:hover { border-color: rgba(255,187,83,0.3); }
+    .mm-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(300px 160px at 100% 0%, rgba(255,187,83,0.08), transparent 60%),
+        radial-gradient(260px 160px at 0% 100%, rgba(90,55,145,0.2), transparent 55%);
+      pointer-events: none;
+    }
+    .mm-card > * { position: relative; }
+
+    .mm-card-media {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(255,187,83,0.14), transparent 55%),
+        radial-gradient(circle at 80% 70%, rgba(140,95,210,0.28), transparent 55%),
+        linear-gradient(135deg, #1d1628 0%, #120d1c 100%);
+      /* Pull image out of the card's padding so only text stays padded */
+      margin: -16px -16px 8px;
+      border-radius: 0.75rem 0.75rem 0 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    /* Subtle diagonal hatch pattern on media */
+    .mm-card-media::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(-45deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.7;
+    }
+    .mm-card-media-label {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      white-space: nowrap;
+    }
+    .mm-card-kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .mm-card-title {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+    }
+    .mm-card-body {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .site-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+    }
+    .sign-in-link {
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--text-primary);
+      font-weight: 500;
+      cursor: pointer;
+      transition: color var(--t-fast) var(--ease);
+    }
+    .sign-in-link:hover { color: var(--gold); }
+
+    .site-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      height: 40px;
+      padding: 0 18px;
+      border-radius: 14px;
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: #000;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+    }
+    .site-cta:hover {
+      background: var(--gold-dim);
+      border-color: var(--gold-dim);
+      color: #000;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - var(--header-h));
+      max-width: 1520px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ───────── Sidebar ───────── */
+    .sidebar {
+      position: sticky;
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      border-right: 1px solid var(--border-soft);
+      padding: var(--s-5) var(--s-3) var(--s-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-5);
+      background: linear-gradient(180deg, rgba(24, 20, 33, 0.55) 0%, rgba(11, 9, 16, 0.18) 100%);
+      backdrop-filter: blur(6px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: 0 var(--s-2);
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: radial-gradient(circle at 30% 30%, var(--gold) 0%, var(--gold-dim) 70%);
+      box-shadow: 0 0 12px var(--gold-glow), inset 0 0 0 1px rgba(255,255,255,0.08);
+      position: relative;
+    }
+    .brand-mark::after {
+      content: "";
+      position: absolute; inset: 4px;
+      border-radius: 3px;
+      background: rgba(10, 8, 16, 0.55);
+    }
+
+    .brand-name {
+      font-family: var(--font-head);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+    .brand-sub {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .nav-section {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-label {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: var(--text-label);
+      padding: 0 var(--s-2);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: 5px var(--s-2);
+      border-radius: var(--r-sm);
+      font-size: 15px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+      position: relative;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+    .nav-item:hover {
+      background: var(--surface-raised);
+      color: var(--text-primary);
+    }
+    .nav-item .dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--text-muted);
+      flex-shrink: 0;
+      transition: background var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+    }
+    .nav-item:hover .dot { background: var(--text-secondary); }
+
+    .nav-item.active {
+      background: linear-gradient(90deg, var(--gold-soft), rgba(255,187,83,0.02) 80%);
+      color: var(--text-primary);
+      box-shadow: inset 0 0 0 1px rgba(255,187,83,0.12);
+    }
+    .nav-item.active .dot {
+      background: var(--gold);
+      box-shadow: 0 0 10px var(--gold-glow);
+    }
+
+    .nav-view-all {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 6px var(--s-2);
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color var(--t-fast) var(--ease);
+    }
+    .nav-view-all:hover { color: var(--gold); }
+    .nav-view-all svg {
+      width: 12px; height: 12px;
+      transition: transform var(--t-fast) var(--ease);
+    }
+    .nav-view-all:hover svg { transform: translateX(2px); }
+
+    .sidebar-foot {
+      margin-top: auto;
+      padding: var(--s-2) var(--s-2) 0;
+      border-top: 1px solid var(--border-soft);
+      padding-top: var(--s-3);
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .sidebar-foot .avatar {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: linear-gradient(135deg, #2e2244, #5a3f80);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+    }
+
+    /* ───────── Main ───────── */
+    .main {
+      padding: var(--s-6) var(--s-6) 80px;
+      min-width: 0;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: var(--s-1);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--text-muted);
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      margin-bottom: var(--s-4);
+    }
+    .breadcrumb .sep { opacity: 0.35; }
+    .breadcrumb .crumb-active { color: var(--text-secondary); }
+    .breadcrumb a {
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color var(--t-fast) var(--ease);
+      font-family: var(--font-mono);
+      letter-spacing: inherit;
+    }
+    .breadcrumb a:hover { color: var(--gold); }
+
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--s-5);
+      margin-bottom: var(--s-6);
+      padding-bottom: var(--s-5);
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .page-title {
+      font-family: var(--font-head);
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--text-primary);
+    }
+    .page-title em {
+      font-style: normal;
+      color: var(--gold);
+      font-weight: 400;
+    }
+
+    .page-sub {
+      font-family: var(--font-body);
+      font-size: 18px;
+      color: #ffffff;
+      margin-top: var(--s-3);
+      max-width: 680px;
+      line-height: 1.55;
+      font-weight: 400;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: var(--s-1);
+    }
+
+    .chip {
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      padding: 6px var(--s-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      cursor: pointer;
+      transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+      font-weight: 400;
+    }
+    .chip:hover { border-color: rgba(255,255,255,0.14); color: var(--text-primary); }
+    .chip.active {
+      border-color: rgba(255,187,83,0.45);
+      color: var(--gold);
+      background: var(--gold-soft);
+    }
+
+    /* Page routing — only active page shown */
+    .page { display: none; }
+    .page.is-active { display: block; }
+
+    /* ───────── Category page header ───────── */
+    .category-header {
+      margin: var(--s-6) 0 var(--s-5);
+      padding-top: var(--s-5);
+      border-top: 1px solid var(--border-soft);
+    }
+    .category-kicker {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--gold);
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: var(--s-2);
+    }
+    .category-title {
+      font-family: var(--font-head);
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--text-primary);
+    }
+    .category-sub {
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: #ffffff;
+      margin-top: var(--s-2);
+      max-width: 640px;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    /* ───────── Grid ───────── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: var(--text-label);
+      margin: var(--s-1) 0 var(--s-3);
+      font-weight: 500;
+    }
+    .section-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--hairline), transparent);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--s-3);
+      margin-bottom: var(--s-6);
+    }
+
+    /* ───── Card (refined) ───── */
+    .card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid #2a2438;
+      border-radius: var(--r-lg);
+      padding: var(--s-3);
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      cursor: pointer;
+      isolation: isolate;
+      transition:
+        transform var(--t-base) var(--ease),
+        border-color var(--t-base) var(--ease),
+        box-shadow var(--t-base) var(--ease),
+        background var(--t-base) var(--ease);
+    }
+
+    /* Top-edge highlight — signature of the elevation */
+    .card::after {
+      content: "";
+      position: absolute;
+      left: var(--s-3);
+      right: var(--s-3);
+      top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      pointer-events: none;
+    }
+
+    /* Mouse-tracked inner glow */
+    .card > .card-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--r-lg);
+      pointer-events: none;
+      background: radial-gradient(420px 220px at var(--mx, 80%) var(--my, 0%), rgba(255,187,83,0.06), transparent 60%);
+      opacity: 0;
+      transition: opacity var(--t-slow) var(--ease);
+      z-index: 1;
+    }
+
+    /* Grain on cards */
+    .card > .card-grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.04;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      background-size: 200px 200px;
+      z-index: 1;
+    }
+
+    .card > * { position: relative; z-index: 2; }
+
+    .card:hover {
+      transform: translateY(-1px);
+      background: var(--surface-elev);
+      border-color: rgba(255,255,255,0.08);
+      box-shadow:
+        0 1px 0 0 rgba(255,255,255,0.04) inset,
+        0 18px 44px -20px rgba(0,0,0,0.55);
+    }
+    .card:hover .card-glow { opacity: 1; }
+
+    .card-icon {
+      width: 22px;
+      height: 22px;
+      color: var(--text-muted);
+      margin-bottom: var(--s-5);
+      stroke-width: 1.5;
+      transition: color var(--t-fast) var(--ease);
+    }
+    .card-featured .card-icon { color: var(--gold); }
+
+    .card-media {
+      aspect-ratio: 16 / 9;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(255,187,83,0.10), transparent 55%),
+        radial-gradient(circle at 80% 70%, rgba(140,95,210,0.22), transparent 55%),
+        linear-gradient(135deg, #1d1628 0%, #120d1c 100%);
+      /* Pull media flush to card edges, only text stays padded */
+      margin: calc(-1 * var(--s-3)) calc(-1 * var(--s-3)) var(--s-3);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-media::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(-45deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.7;
+    }
+    .card-media-label {
+      position: relative;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .card-body { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+
+    .card-meta {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-muted);
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      margin-top: var(--s-3);
+      padding-top: var(--s-2);
+      border-top: 1px solid var(--border-soft);
+    }
+    .card-featured .card-meta { color: var(--gold-dim); }
+
+    .card-title {
+      font-family: var(--font-head);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.018em;
+      line-height: 1.2;
+    }
+
+    .card-desc {
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    .card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--s-3);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-muted);
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+    }
+    .card-foot .arrow {
+      width: 24px; height: 24px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+      font-family: var(--font-body);
+    }
+    .card:hover .card-foot .arrow {
+      color: var(--gold);
+      border-color: rgba(255,187,83,0.5);
+      transform: translateX(2px);
+    }
+
+    /* ───────── Abstract Illustrations (SVG) ───────── */
+    .viz { position: absolute; inset: 0; }
+
+    /* Small tag on card */
+    .card-tag {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 3px var(--s-1);
+      border-radius: 6px;
+      background: rgba(11, 9, 16, 0.55);
+      border: 1px solid var(--border-soft);
+      backdrop-filter: blur(4px);
+      z-index: 3;
+    }
+
+    /* Links — muted by default, gold on hover, no underline */
+    a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color var(--t-fast) var(--ease);
+    }
+    a:hover { color: var(--gold); }
+
+    /* Featured card — restrained emphasis, not loud */
+    .card-featured {
+      border-color: rgba(255,187,83,0.22);
+      background:
+        linear-gradient(180deg, rgba(255,187,83,0.04), transparent 45%),
+        var(--surface-raised);
+    }
+    .card-featured::after {
+      background: linear-gradient(90deg, transparent, rgba(255,187,83,0.45), transparent);
+    }
+    .card-featured .card-title { color: var(--gold); }
+    .card-featured:hover { border-color: rgba(255,187,83,0.35); }
+
+    /* ─────────────────────────────────────────────
+       Use-case landing page (Retool-style, full-width)
+       ───────────────────────────────────────────── */
+    body.layout-wide .sidebar { display: none; }
+    body.layout-wide .app { grid-template-columns: 1fr; }
+
+    .uc-container {
+      max-width: none;
+      margin: 0 auto;
+      padding: 0 var(--s-6);
+    }
+
+    .uc-hero {
+      padding: var(--s-5) 0 var(--s-6);
+    }
+    .uc-kicker {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      margin-bottom: var(--s-4);
+    }
+    .uc-title {
+      font-family: var(--font-head);
+      font-size: 56px;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.04;
+      color: var(--text-primary);
+      max-width: 920px;
+      margin-bottom: var(--s-4);
+    }
+    .uc-sub {
+      font-family: var(--font-body);
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      max-width: 720px;
+      margin-bottom: var(--s-5);
+    }
+    .uc-cta-row {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      height: 48px;
+      padding: 0 24px;
+      border-radius: 18px;
+      border: 1px solid transparent;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+    }
+    .btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .btn-primary {
+      background: var(--gold);
+      color: #000;
+      border-color: var(--gold);
+    }
+    .btn-primary:hover {
+      background: var(--gold-dim);
+      border-color: var(--gold-dim);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .btn-ghost:hover {
+      background: var(--surface);
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .uc-section {
+      padding: var(--s-6) 0;
+      border-top: 1px solid var(--border-soft);
+    }
+    .uc-h2 {
+      font-family: var(--font-head);
+      font-size: 36px;
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin-bottom: var(--s-2);
+    }
+    .uc-h2-sub {
+      font-family: var(--font-body);
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: var(--s-5);
+    }
+
+    /* Step grid (4 cards) */
+    .uc-step-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--s-3);
+      margin-top: var(--s-5);
+    }
+    .uc-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: var(--s-4);
+      position: relative;
+      overflow: hidden;
+    }
+    .uc-step::after {
+      content: "";
+      position: absolute;
+      left: var(--s-3); right: var(--s-3); top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    }
+    .uc-step-num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05rem;
+      color: var(--gold);
+      margin-bottom: var(--s-2);
+    }
+    .uc-step-title {
+      font-family: var(--font-head);
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text-primary);
+      letter-spacing: -0.015em;
+      margin-bottom: 6px;
+    }
+    .uc-step-desc {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: var(--s-2);
+    }
+    .uc-step-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .uc-step-list li {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-muted);
+      padding: 4px 0 4px 18px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .uc-step-list li::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 11px;
+      width: 8px; height: 1px;
+      background: var(--text-muted);
+    }
+
+    /* Pillars (4 capabilities) */
+    .uc-pillars {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--s-3);
+      margin-top: var(--s-5);
+    }
+    .uc-pillar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: var(--s-4);
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+    }
+    .uc-pillar:hover {
+      border-color: rgba(255,187,83,0.3);
+      background: var(--surface-raised);
+    }
+    .uc-pillar:hover .uc-pillar-icon { color: var(--gold); }
+    .uc-pillar-icon {
+      width: 22px;
+      height: 22px;
+      color: var(--text-muted);
+      stroke-width: 1.5;
+      margin-bottom: var(--s-4);
+    }
+    .uc-pillar-title {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .uc-pillar-desc {
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Workflow card */
+    /* ── Real workflows: big 2-col rows ── */
+    .uc-workflow {
+      margin-top: var(--s-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-6);
+    }
+    .uc-workflow-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: var(--s-6);
+      align-items: stretch;
+    }
+    .uc-workflow-row.reverse { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+    .uc-workflow-row.reverse .uc-workflow-copy { order: 2; }
+    .uc-workflow-row.reverse .uc-workflow-visual { order: 1; }
+
+    .uc-workflow-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--s-5) var(--s-4);
+    }
+    .uc-workflow-copy h3 {
+      font-family: var(--font-head);
+      font-size: 40px;
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      color: var(--text-primary);
+      margin-bottom: var(--s-6);
+      max-width: 440px;
+    }
+    .uc-workflow-features {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-5);
+    }
+    .uc-workflow-feature {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: var(--s-3);
+      padding: var(--s-3) 0;
+      border-top: 1px solid var(--hairline);
+    }
+    .uc-workflow-feature:first-child { border-top: none; padding-top: 0; }
+    .uc-workflow-feature-icon {
+      width: 22px;
+      height: 22px;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .uc-workflow-feature-title {
+      font-family: var(--font-head);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.015em;
+      margin-bottom: 6px;
+    }
+    .uc-workflow-feature-desc {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* Visual card on the right */
+    .uc-workflow-visual {
+      position: relative;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      min-height: 480px;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255,187,83,0.08), transparent 55%),
+        radial-gradient(circle at 80% 85%, rgba(140,95,210,0.18), transparent 55%),
+        linear-gradient(160deg, #1d1628 0%, #120d1c 100%);
+      border: 1px solid var(--border);
+    }
+    .uc-workflow-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(-45deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.7;
+    }
+    .uc-workflow-mock {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(78%, 420px);
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: var(--s-4);
+      box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02);
+    }
+    .uc-workflow-mock-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--s-3);
+      padding-bottom: var(--s-2);
+      border-bottom: 1px solid var(--hairline);
+    }
+    .uc-workflow-mock-head strong {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+    }
+    .uc-workflow-mock-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    }
+    .uc-workflow-mock-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 13px;
+    }
+    .uc-workflow-mock-row .label { color: var(--text-muted); }
+    .uc-workflow-mock-row .val { color: var(--text-primary); font-family: var(--font-mono); }
+    .uc-workflow-mock-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--gold-soft);
+      color: var(--gold);
+      border: 1px solid rgba(255,187,83,0.25);
+    }
+    .uc-workflow-mock-cta {
+      margin-top: var(--s-3);
+      padding: var(--s-3);
+      background: var(--canvas);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-2);
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 13px;
+    }
+    .uc-workflow-mock-cta-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--text-primary);
+      color: var(--canvas);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 900px) {
+      .uc-workflow-row,
+      .uc-workflow-row.reverse { grid-template-columns: 1fr; }
+      .uc-workflow-row.reverse .uc-workflow-copy { order: 1; }
+      .uc-workflow-row.reverse .uc-workflow-visual { order: 2; }
+      .uc-workflow-copy h3 { font-size: 32px; }
+      .uc-workflow-visual { min-height: 380px; }
+    }
+
+    /* Setup guides */
+    .uc-guides {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--s-3);
+      margin-top: var(--s-5);
+    }
+    .uc-guide {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: var(--s-4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s-3);
+      transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+    }
+    .uc-guide:hover {
+      border-color: rgba(255,187,83,0.3);
+      background: var(--surface-raised);
+    }
+    .uc-guide-title {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .uc-guide-arrow {
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+    }
+    .uc-guide:hover .uc-guide-arrow {
+      color: var(--gold);
+      transform: translateX(2px);
+    }
+
+    /* Final CTA */
+    .uc-final-cta {
+      margin: var(--s-6) 0 0;
+      padding: 56px var(--s-5);
+      background:
+        radial-gradient(600px 300px at 0% 0%, rgba(90,55,145,0.25), transparent 60%),
+        radial-gradient(500px 280px at 100% 100%, rgba(255,187,83,0.08), transparent 55%),
+        var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      text-align: left;
+    }
+    .uc-final-cta h2 {
+      font-family: var(--font-head);
+      font-size: 40px;
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1.08;
+      color: var(--text-primary);
+      max-width: 680px;
+      margin-bottom: var(--s-3);
+    }
+    .uc-final-cta p {
+      font-family: var(--font-body);
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 620px;
+      margin-bottom: var(--s-4);
+      line-height: 1.5;
+    }
+
+    /* ─────────────────────────────────────────────
+       Compass page — dark resource hub
+       ───────────────────────────────────────────── */
+    .compass {
+      color: var(--text-primary);
+      font-family: var(--font-body);
+    }
+
+    .compass-container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: var(--s-5) var(--s-4) 0;
+    }
+
+    .compass-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    /* Compass sidebar (manual category nav) */
+    .compass-sidebar {
+      position: sticky;
+      top: calc(var(--header-h) + 16px);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding-bottom: 24px;
+    }
+    .compass-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+    }
+    .compass-nav-item svg {
+      width: 18px; height: 18px;
+      color: var(--text-muted);
+      stroke-width: 1.5;
+      flex-shrink: 0;
+    }
+    .compass-nav-item:hover {
+      background: var(--surface);
+      color: var(--text-primary);
+    }
+    .compass-nav-item.active {
+      background: var(--gold-soft);
+      color: var(--gold);
+      box-shadow: inset 0 0 0 1px rgba(255,187,83,0.15);
+    }
+    .compass-nav-item.active svg { color: var(--gold); }
+    .compass-nav-divider {
+      height: 1px;
+      background: var(--border-soft);
+      margin: 12px 0;
+    }
+
+    .compass-sidebar-cta {
+      margin-top: 32px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      background: var(--surface);
+    }
+    .compass-sidebar-cta h5 {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.012em;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .compass-sidebar-cta p {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      margin-bottom: 16px;
+    }
+    .compass-sidebar-cta button {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #1a1320;
+      border: 1px solid var(--gold);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* Hero header */
+    .compass-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      padding-bottom: 0;
+    }
+    .compass-hero-text h1 {
+      font-family: var(--font-head);
+      font-size: 56px;
+      font-weight: 400;
+      letter-spacing: -0.028em;
+      line-height: 1.05;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+    }
+    .compass-hero-text p {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      max-width: 520px;
+    }
+    .compass-hero-graphic {
+      aspect-ratio: 16 / 5;
+      max-height: 240px;
+      border-radius: 0;
+      background:
+        linear-gradient(0deg, transparent 49%, rgba(255,255,255,0.04) 50%, transparent 51%),
+        linear-gradient(90deg, transparent 49%, rgba(255,255,255,0.04) 50%, transparent 51%);
+      background-size: 40px 40px;
+      position: relative;
+    }
+
+    /* Hero featured + collections split */
+    .compass-feature {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-top: 56px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .compass-feature-visual {
+      aspect-ratio: 1 / 1;
+      border-right: 1px solid var(--border-soft);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,187,83,0.14), transparent 55%),
+        radial-gradient(circle at 70% 70%, rgba(120,80,180,0.18), transparent 55%),
+        linear-gradient(135deg, #1d1628 0%, #120d1c 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .compass-feature-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(-45deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 22px 22px;
+      opacity: 0.7;
+    }
+    .compass-feature-visual-label {
+      position: relative;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .compass-feature-list { display: flex; flex-direction: column; }
+    .compass-feature-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
+      padding: 32px;
+      flex: 1;
+      border-bottom: 1px solid var(--border-soft);
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease);
+    }
+    .compass-feature-item:last-child { border-bottom: none; }
+    .compass-feature-item:hover { background: rgba(255,255,255,0.02); }
+    .compass-feature-item-kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .compass-feature-item-title {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: -0.018em;
+      color: var(--text-primary);
+    }
+    .compass-feature-item-desc {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* "Explore more ways" grid */
+    /* Section anchor nav (under hero) */
+    .compass-nav {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      padding: 0;
+      margin-top: 0;
+      border-top: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--border-soft);
+      overflow-x: auto;
+    }
+    .compass-nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1 1 0;
+      min-width: 0;
+      justify-content: flex-start;
+      font-family: var(--font-head);
+      font-size: 20px;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      padding: 22px 18px;
+      border-radius: 0;
+      border-right: 1px solid var(--border-soft);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+    }
+    .compass-nav a:last-of-type { border-right: none; }
+    .compass-nav a:hover { color: var(--gold); background: transparent; }
+    .compass-nav a.active {
+      color: var(--text-primary);
+      background: transparent;
+    }
+    .compass-nav a.active::after {
+      content: attr(data-count);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0;
+      align-self: flex-start;
+      margin-top: 4px;
+    }
+    .compass-nav a::after {
+      content: attr(data-count);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0;
+      align-self: flex-start;
+      margin-top: 4px;
+    }
+    .compass-nav-sep { display: none; }
+
+    /* Category tabs (Build with AI / Blog posts / Videos / ...) */
+    .compass-tabs {
+      display: flex;
+      align-items: stretch;
+      gap: 2px;
+      margin: 56px 0 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .compass-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 28px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08rem;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+      white-space: nowrap;
+    }
+    .compass-tab:hover { color: var(--text-primary); }
+    .compass-tab.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--gold);
+    }
+    .compass-tab-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 999px;
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0;
+    }
+    .compass-tab.active .compass-tab-count {
+      background: var(--gold-soft);
+      border-color: rgba(255,187,83,0.3);
+      color: var(--gold);
+    }
+
+    .compass-explore {
+      padding: 56px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .compass-explore h2 {
+      font-family: var(--font-head);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      color: var(--text-primary);
+    }
+    .compass-explore-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 1px solid var(--border-soft);
+      border-left: 1px solid var(--border-soft);
+    }
+    .compass-explore-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--border-soft);
+      border-right: 1px solid var(--border-soft);
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease);
+      color: var(--text-primary);
+    }
+    .compass-explore-item:hover { background: rgba(255,255,255,0.02); }
+    .compass-explore-item svg {
+      width: 20px; height: 20px;
+      color: var(--gold);
+      stroke-width: 1.5;
+      flex-shrink: 0;
+    }
+    .compass-explore-item span {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    /* Latest blog */
+    .compass-blog {
+      padding: 56px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .compass-blog h2 {
+      font-family: var(--font-head);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      color: var(--text-primary);
+    }
+    .compass-blog-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 32px;
+    }
+    .compass-blog-feature {
+      cursor: pointer;
+    }
+    .compass-blog-feature-media {
+      aspect-ratio: 16 / 9;
+      border-radius: 0.75rem;
+      background:
+        radial-gradient(circle at 40% 50%, rgba(255,187,83,0.12), transparent 55%),
+        radial-gradient(circle at 80% 60%, rgba(120,80,180,0.20), transparent 55%),
+        linear-gradient(135deg, #1d1628 0%, #120d1c 100%);
+      border: 1px solid var(--border-soft);
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .compass-blog-feature-media::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(-45deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 18px 18px;
+      opacity: 0.6;
+    }
+    .compass-blog-feature-title {
+      font-family: var(--font-head);
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .compass-blog-feature-byline {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .compass-blog-tag {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 4px 10px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: var(--gold-soft);
+      border: 1px solid rgba(255,187,83,0.25);
+      border-radius: 999px;
+    }
+    .compass-blog-side { display: flex; flex-direction: column; gap: 20px; }
+    .compass-blog-item {
+      display: grid;
+      grid-template-columns: 1fr 120px;
+      gap: 16px;
+      align-items: start;
+      cursor: pointer;
+    }
+    .compass-blog-item-thumb {
+      aspect-ratio: 1 / 1;
+      border-radius: 0.5rem;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,187,83,0.14), transparent 55%),
+        radial-gradient(circle at 75% 75%, rgba(120,80,180,0.20), transparent 55%),
+        linear-gradient(135deg, #1d1628 0%, #120d1c 100%);
+      border: 1px solid var(--border-soft);
+    }
+    .compass-blog-item-title {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.012em;
+      line-height: 1.3;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .compass-blog-item-byline {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* Newsletter + community */
+    .compass-connect {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 48px;
+      padding: 56px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .compass-news h3 {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: -0.018em;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      max-width: 360px;
+      line-height: 1.25;
+    }
+    .compass-news-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .compass-news-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .compass-news-row {
+      display: flex;
+      gap: 10px;
+    }
+    .compass-news-input {
+      flex: 1;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14px;
+    }
+    .compass-news-submit {
+      padding: 12px 22px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #1a1320;
+      border: 1px solid var(--gold);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .compass-news-legal {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .compass-community h4 {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      font-weight: 400;
+    }
+    .compass-community-icons {
+      display: flex;
+      gap: 12px;
+    }
+    .compass-community-icon {
+      width: 48px; height: 48px;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+    }
+    .compass-community-icon:hover { color: var(--gold); border-color: rgba(255,187,83,0.5); }
+
+    /* Footer */
+    .compass-footer {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 32px;
+      padding: 56px 0 40px;
+    }
+    .compass-footer-col h5 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 14px;
+    }
+    .compass-footer-col a {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-primary);
+      padding: 4px 0;
+      cursor: pointer;
+    }
+    .compass-footer-col a:hover { color: var(--gold); }
+
+    /* Meta / wordmark */
+    .compass-meta {
+      padding: 0 0 40px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 24px;
+    }
+    .compass-meta a { color: var(--text-muted); cursor: pointer; }
+    .compass-meta a:hover { color: var(--text-primary); }
+
+    .compass-wordmark {
+      font-family: var(--font-head);
+      font-size: clamp(120px, 22vw, 340px);
+      font-weight: 500;
+      letter-spacing: -0.045em;
+      line-height: 0.9;
+      color: var(--text-primary);
+      padding: 24px var(--s-4) 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      border-top: 1px solid var(--border-soft);
+    }
+
+    @media (max-width: 960px) {
+      .compass-hero,
+      .compass-feature,
+      .compass-blog-grid,
+      .compass-connect { grid-template-columns: 1fr; }
+      .compass-explore-grid { grid-template-columns: repeat(2, 1fr); }
+      .compass-footer { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Responsive */
+    @media (max-width: 1160px) {
+      .grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 860px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .main { padding: 28px 20px 60px; }
+      .grid { grid-template-columns: 1fr; }
+      .page-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════ Site header ═══════════ -->
+  <header class="site-header">
+    <a class="site-brand" href="mantle-homepage.html" aria-label="Mantle Compass">
+      <svg class="site-logo" xmlns="http://www.w3.org/2000/svg" width="160" height="30" fill="none" viewBox="0 0 192 36" aria-hidden="true"><path fill="#ffbb53" d="M0 8a8 8 0 0 1 8-8h20a8 8 0 0 1 8 8v20a8 8 0 0 1-8 8H8a8 8 0 0 1-8-8z"/><path fill="#000" d="M8 9v18l4.826-.99v-9.42l4.17 9.12h2.979l4.14-9.12v9.42L29 27V9h-6.166l-4.379 8.46L14.106 9z"/><path fill="#fff" d="M105.031 25.3q-1.61 0-2.83-.7a5 5 0 0 1-1.89-1.97q-.67-1.27-.67-2.94 0-1.77.66-3.07.67-1.3 1.86-2.01t2.77-.71q1.65 0 2.81.77 1.16.76 1.73 2.17.58 1.41.46 3.35h-2.09v-.76q-.02-1.88-.72-2.78-.69-.9-2.11-.9-1.57 0-2.36.99t-.79 2.86q0 1.78.79 2.76.79.97 2.28.97.98 0 1.69-.44.72-.45 1.12-1.28l2.05.65q-.63 1.45-1.91 2.25-1.28.79-2.85.79m-3.85-5.11v-1.63h7.71v1.63zM95.548 25V10.3h2.09V25zm-2.077 0a9 9 0 0 1-2 .17q-.98-.03-1.75-.38t-1.16-1.1q-.35-.67-.38-1.36-.02-.7-.02-1.58V11.2h2.1v9.45q0 .65.01 1.13.021.48.21.81.36.62 1.14.71.79.08 1.85-.07zm-7.38-9.12V14.2h7.38v1.68zM82.967 25v-5.31q0-.63-.11-1.29-.1-.67-.4-1.24a2.35 2.35 0 0 0-.83-.92q-.53-.35-1.39-.35-.56 0-1.06.19-.5.18-.88.59-.37.41-.59 1.08-.21.67-.21 1.63l-1.3-.49q0-1.47.55-2.59a4.13 4.13 0 0 1 1.58-1.76q1.029-.63 2.49-.63 1.12 0 1.88.36t1.23.95q.48.58.73 1.27t.34 1.35.09 1.16v6zm-7.59 0V14.2h1.87v3.12h.25V25zm-7.927.3q-1.2 0-2.01-.44-.81-.45-1.23-1.18a3.3 3.3 0 0 1-.41-1.62q0-.82.29-1.44t.86-1.05q.57-.44 1.4-.71.72-.21 1.63-.37a55 55 0 0 1 1.91-.3q1.01-.14 2-.28l-.76.42q.02-1.27-.54-1.88-.55-.62-1.9-.62-.85 0-1.56.4-.71.39-.99 1.3l-1.95-.6q.4-1.39 1.52-2.21 1.13-.82 3-.82 1.45 0 2.52.5 1.08.49 1.58 1.56.26.53.32 1.12t.06 1.27V25h-1.85v-2.47l.36.32q-.67 1.24-1.71 1.85-1.03.6-2.54.6m.37-1.71q.89 0 1.53-.31a3 3 0 0 0 1.03-.81q.39-.49.51-1.02.17-.48.19-1.08.03-.6.03-.96l.68.25-1.8.27q-.81.12-1.47.24-.65.11-1.16.27-.43.15-.77.36-.33.21-.53.51-.19.3-.19.73 0 .42.21.78.21.35.64.56t1.1.21M46.598 10.455h2.663l4.631 11.306h.17l4.631-11.306h2.663V25.25H59.27V14.474h-.136l-4.29 10.776h-1.732l-4.29-10.783h-.135V25.25h-2.088zm141.035 14.806q-1.71 0-2.817-.738-1.098-.738-1.35-2.052l1.35-.225q.216.828.981 1.323.774.486 1.908.486 1.107 0 1.746-.459.639-.468.639-1.269 0-.45-.207-.729-.198-.288-.819-.531t-1.854-.576q-1.323-.36-2.07-.72t-1.062-.828q-.315-.477-.315-1.161 0-.828.468-1.449.468-.63 1.296-.972.828-.351 1.926-.351t1.962.36q.873.351 1.404.99t.63 1.485l-1.35.243a1.95 1.95 0 0 0-.855-1.35q-.711-.504-1.809-.522-1.035-.027-1.683.396-.648.414-.648 1.107 0 .387.234.666.234.27.846.513.621.243 1.764.531 1.341.342 2.106.72t1.089.891.324 1.269q0 1.377-1.026 2.169-1.017.783-2.808.783m-9.097 0q-1.71 0-2.817-.738-1.098-.738-1.35-2.052l1.35-.225q.216.828.981 1.323.774.486 1.908.486 1.107 0 1.746-.459.639-.468.639-1.269 0-.45-.207-.729-.198-.288-.819-.531t-1.854-.576q-1.323-.36-2.07-.72t-1.062-.828q-.315-.477-.315-1.161 0-.828.468-1.449.468-.63 1.296-.972.828-.351 1.926-.351t1.962.36q.873.351 1.404.99t.63 1.485l-1.35.243a1.95 1.95 0 0 0-.855-1.35q-.711-.504-1.809-.522-1.035-.027-1.683.396-.648.414-.648 1.107 0 .387.234.666.234.27.846.513.621.243 1.764.531 1.341.342 2.106.72t1.089.891.324 1.269q0 1.377-1.026 2.169-1.017.783-2.808.783m-10.488.009q-1.098 0-1.845-.396-.738-.396-1.107-1.053a2.9 2.9 0 0 1-.369-1.431q0-.792.315-1.35a2.7 2.7 0 0 1 .873-.927q.558-.36 1.287-.549.738-.18 1.629-.315.9-.144 1.755-.243.864-.108 1.512-.207l-.468.288q.027-1.44-.558-2.133t-2.034-.693q-.999 0-1.692.45-.684.45-.963 1.422l-1.287-.378q.333-1.305 1.341-2.025t2.619-.72q1.332 0 2.259.504.936.495 1.323 1.44.18.423.234.945t.054 1.062V25h-1.179v-2.439l.342.144q-.495 1.251-1.539 1.908t-2.502.657m.153-1.143q.927 0 1.62-.333a2.9 2.9 0 0 0 1.116-.909q.423-.585.549-1.314.108-.468.117-1.026.009-.567.009-.846l.504.261q-.675.09-1.467.18-.783.09-1.548.207-.756.117-1.368.279a3.7 3.7 0 0 0-.801.333 1.85 1.85 0 0 0-.639.558q-.243.351-.243.873 0 .423.207.819.216.396.684.657.477.261 1.26.261m-8.861 1.143q-1.341 0-2.268-.675-.927-.684-1.404-1.845-.477-1.17-.477-2.619 0-1.476.477-2.628.486-1.161 1.422-1.827t2.304-.666q1.332 0 2.286.675t1.458 1.836q.513 1.161.513 2.61 0 1.458-.513 2.619t-1.476 1.845q-.963.675-2.322.675m-4.374 4.05V15.28h1.188v7.317h.144v6.723zm4.239-5.283q1.017 0 1.692-.513t1.008-1.395q.342-.891.342-1.998 0-1.098-.333-1.98t-1.017-1.395q-.675-.513-1.719-.513-1.017 0-1.692.495-.666.495-.999 1.377-.333.873-.333 2.016 0 1.125.333 2.016.333.882 1.008 1.386t1.71.504m-7.536.963.009-6.381q0-1.125-.63-1.764-.621-.648-1.584-.648-.549 0-1.071.252a2.07 2.07 0 0 0-.864.81q-.333.558-.333 1.458l-.783-.225q-.027-1.044.405-1.827a3.13 3.13 0 0 1 1.206-1.215 3.46 3.46 0 0 1 1.746-.441q1.467 0 2.349.909.882.9.882 2.439L152.992 25zm-11.601 0v-9.72h1.188v2.394h.144V25zm5.814 0 .009-6.291q0-1.161-.621-1.827-.612-.675-1.62-.675t-1.629.693q-.621.684-.621 1.827l-.792-.432a3.2 3.2 0 0 1 .441-1.674 3.14 3.14 0 0 1 1.206-1.17q.765-.432 1.737-.432.927 0 1.647.396.729.396 1.143 1.152t.414 1.836L147.187 25zm-12.038.27q-1.449 0-2.475-.657a4.3 4.3 0 0 1-1.575-1.818q-.549-1.161-.549-2.664 0-1.53.558-2.682t1.584-1.791q1.035-.648 2.457-.648 1.458 0 2.484.657a4.14 4.14 0 0 1 1.575 1.809q.549 1.152.549 2.655 0 1.53-.549 2.691a4.2 4.2 0 0 1-1.584 1.8q-1.035.648-2.475.648m0-1.269q1.62 0 2.412-1.071.792-1.08.792-2.799 0-1.764-.801-2.808-.792-1.044-2.403-1.044-1.089 0-1.8.495-.702.486-1.053 1.359-.342.864-.342 1.998 0 1.755.81 2.817.81 1.053 2.385 1.053m-11.337 1.269q-1.935 0-3.267-.855-1.332-.864-2.016-2.385t-.684-3.51.684-3.51 2.016-2.376q1.332-.864 3.267-.864 2.259 0 3.69 1.161 1.431 1.152 1.962 3.096l-1.35.351q-.414-1.539-1.485-2.439t-2.817-.9q-1.521 0-2.529.693t-1.521 1.935q-.504 1.233-.522 2.853-.009 1.62.495 2.853.513 1.233 1.53 1.935 1.026.693 2.547.693 1.746 0 2.817-.9 1.071-.909 1.485-2.439l1.35.351q-.531 1.944-1.962 3.105-1.431 1.152-3.69 1.152"/></svg>
+    </a>
+
+    <nav class="site-nav">
+      <!-- Platform -->
+      <div class="nav-group">
+        <a class="nav-trigger">Platform
+          <svg class="chev" viewBox="0 0 12 12" fill="none"><path d="M3 4.5 L6 7.5 L9 4.5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <div class="mega-menu mega-menu-platform">
+          <div class="mm-grid cols-2-plat">
+            <!-- Platform cards (MantleOps + Mantle AI) stacked -->
+            <div>
+              <div class="mm-stack">
+                <div class="mm-card">
+                  <div class="mm-card-head">
+                    <div class="mm-card-kicker">Mantle Ops</div>
+                    <a class="mm-card-arrow" aria-label="Platform overview">
+                      <svg class="icon-default" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 L11 5"/><path d="M6 5h5v5"/></svg><svg class="icon-hover" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="M9 4l4 4-4 4"/></svg>
+                    </a>
+                  </div>
+                  <div class="mm-card-title">The business layer for your app</div>
+                  <div class="mm-card-body">Run your entire product on one platform, fully connected.</div>
+                </div>
+
+                <div class="mm-card">
+                  <div class="mm-card-head">
+                    <div class="mm-card-kicker">Mantle AI <span class="mm-badge">New</span></div>
+                    <a class="mm-card-arrow" aria-label="Explore Mantle AI">
+                      <svg class="icon-default" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 L11 5"/><path d="M6 5h5v5"/></svg><svg class="icon-hover" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="M9 4l4 4-4 4"/></svg>
+                    </a>
+                  </div>
+                  <div class="mm-card-title">AI that connects everything</div>
+                  <div class="mm-card-body">Automates workflows and takes action across your systems.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Core systems -->
+            <div>
+              <div class="mm-section-label">Systems</div>
+              <div class="mm-list two-col">
+                <a class="mm-item" data-nav="customers">
+                  <div class="mm-item-title">Customers</div>
+                  <div class="mm-item-sub">Profiles, lifecycle, segmentation</div>
+                </a>
+                <a class="mm-item">
+                  <div class="mm-item-title">Billing</div>
+                  <div class="mm-item-sub">Pricing, subscriptions, payments</div>
+                </a>
+                <a class="mm-item">
+                  <div class="mm-item-title">Email + messaging</div>
+                  <div class="mm-item-sub">Lifecycle, campaigns, automation</div>
+                </a>
+                <a class="mm-item">
+                  <div class="mm-item-title">Analytics</div>
+                  <div class="mm-item-sub">Acquisition, retention, revenue</div>
+                </a>
+                <a class="mm-item">
+                  <div class="mm-item-title">Automations</div>
+                  <div class="mm-item-sub">Triggers, workflows, routing</div>
+                </a>
+                <a class="mm-item">
+                  <div class="mm-item-title">Sales</div>
+                  <div class="mm-item-sub">Leads, pipeline, conversion</div>
+                </a>
+                <a class="mm-item">
+                  <div class="mm-item-title">Partnerships</div>
+                  <div class="mm-item-sub">Affiliates, referrals, distribution</div>
+                </a>
+                <a class="mm-item">
+                  <div class="mm-item-title">Support</div>
+                  <div class="mm-item-sub">Tickets, help docs, AI responses</div>
+                </a>
+              </div>
+              <div style="margin-top: 20px;">
+                <a class="mm-link" data-nav="systems">View all systems →</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Solutions -->
+      <div class="nav-group">
+        <a class="nav-trigger">Solutions
+          <svg class="chev" viewBox="0 0 12 12" fill="none"><path d="M3 4.5 L6 7.5 L9 4.5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <div class="mega-menu mega-menu-wide">
+          <div class="mm-grid cols-3-card">
+            <!-- Use cases -->
+            <div>
+              <div class="mm-section-label">Use cases</div>
+              <div class="mm-list">
+                <a class="mm-item" data-nav="launch-app"><div class="mm-item-title">Launch your app</div></a>
+                <a class="mm-item" data-nav="use-cases"><div class="mm-item-title">Monetize your product</div></a>
+                <a class="mm-item" data-nav="use-cases"><div class="mm-item-title">Onboard and activate users</div></a>
+                <a class="mm-item" data-nav="use-cases"><div class="mm-item-title">Engage and retain users</div></a>
+                <a class="mm-item" data-nav="use-cases"><div class="mm-item-title">Understand your data</div></a>
+                <a class="mm-item" data-nav="use-cases"><div class="mm-item-title">Grow your app</div></a>
+              </div>
+              <div style="margin-top: 14px;">
+                <a class="mm-link" data-nav="use-cases">View all use cases →</a>
+              </div>
+            </div>
+
+            <!-- Built for -->
+            <div>
+              <div class="mm-section-label">Built for</div>
+              <div class="mm-list">
+                <a class="mm-item"><div class="mm-item-title">Shopify apps</div></a>
+                <a class="mm-item"><div class="mm-item-title">AI-built apps</div></a>
+                <a class="mm-item"><div class="mm-item-title">Web apps</div></a>
+                <a class="mm-item"><div class="mm-item-title">Mobile apps</div></a>
+              </div>
+              <div style="margin-top: 14px;">
+                <a class="mm-link">See all integrations →</a>
+              </div>
+            </div>
+
+            <!-- Featured card -->
+            <div>
+              <div class="mm-card">
+                <div class="mm-card-media" aria-hidden="true">
+                  <span class="mm-card-media-label">Customer logo</span>
+                </div>
+                <div class="mm-card-head">
+                  <div class="mm-card-kicker">Featured customer</div>
+                  <a class="mm-card-arrow" aria-label="Read more">
+                    <svg class="icon-default" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 L11 5"/><path d="M6 5h5v5"/></svg><svg class="icon-hover" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="M9 4l4 4-4 4"/></svg>
+                  </a>
+                </div>
+                <div class="mm-card-title">How TXTCart drove $131K in referral revenue using Mantle</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resources -->
+      <div class="nav-group">
+        <a class="nav-trigger">Resources
+          <svg class="chev" viewBox="0 0 12 12" fill="none"><path d="M3 4.5 L6 7.5 L9 4.5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <div class="mega-menu mega-menu-wide">
+          <div class="mm-grid cols-4-sol">
+            <div>
+              <div class="mm-section-label">Company</div>
+              <div class="mm-list">
+                <a class="mm-item"><div class="mm-item-title">Customers</div></a>
+                <a class="mm-item"><div class="mm-item-title">Blog</div></a>
+                <a class="mm-item"><div class="mm-item-title">Events</div></a>
+                <a class="mm-item"><div class="mm-item-title">About</div></a>
+              </div>
+            </div>
+            <div>
+              <div class="mm-section-label">Learn</div>
+              <div class="mm-list">
+                <a class="mm-item"><div class="mm-item-title">Docs</div></a>
+                <a class="mm-item" data-nav="compass"><div class="mm-item-title">Compass</div></a>
+                <a class="mm-item"><div class="mm-item-title">Frameworks</div></a>
+                <a class="mm-item"><div class="mm-item-title">Join our Discord</div></a>
+              </div>
+            </div>
+            <div>
+              <div class="mm-section-label">Developers</div>
+              <div class="mm-list">
+                <a class="mm-item"><div class="mm-item-title">MCPs</div></a>
+                <a class="mm-item"><div class="mm-item-title">API reference</div></a>
+                <a class="mm-item"><div class="mm-item-title">SDKs</div></a>
+                <a class="mm-item"><div class="mm-item-title">Changelog</div></a>
+              </div>
+            </div>
+
+            <!-- Featured: Compass -->
+            <div>
+              <div class="mm-card" data-nav="compass">
+                <div class="mm-card-media" aria-hidden="true">
+                  <span class="mm-card-media-label">Compass visual</span>
+                </div>
+                <div class="mm-card-head">
+                  <div class="mm-card-kicker">Mantle Compass</div>
+                  <a class="mm-card-arrow" aria-label="Explore Compass">
+                    <svg class="icon-default" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 L11 5"/><path d="M6 5h5v5"/></svg><svg class="icon-hover" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="M9 4l4 4-4 4"/></svg>
+                  </a>
+                </div>
+                <div class="mm-card-title">The framework for building great apps</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a>Docs</a>
+      <a>Pricing</a>
+    </nav>
+
+    <div class="site-actions">
+      <a class="sign-in-link">Sign in</a>
+      <a class="site-cta">Start for free</a>
+    </div>
+  </header>
+
+  <div class="app">
+    <!-- ═══════════ Sidebar ═══════════ -->
+    <aside class="sidebar">
+      <div class="nav-section">
+        <div class="nav-label">Core systems</div>
+        <div class="nav-item active" data-page="systems"><span class="dot"></span>View all</div>
+        <div class="nav-item" data-page="customers"><span class="dot"></span>Customers</div>
+        <div class="nav-item"><span class="dot"></span>Billing</div>
+        <div class="nav-item"><span class="dot"></span>Email + messaging</div>
+        <div class="nav-item"><span class="dot"></span>Analytics</div>
+        <div class="nav-item"><span class="dot"></span>Automations</div>
+        <div class="nav-item"><span class="dot"></span>Sales</div>
+        <div class="nav-item"><span class="dot"></span>Partnerships</div>
+        <div class="nav-item"><span class="dot"></span>Support</div>
+      </div>
+
+    </aside>
+
+    <!-- ═══════════ Main ═══════════ -->
+    <main class="main">
+
+    <!-- ═══════════ PAGE: All use cases (home) ═══════════ -->
+    <section class="page is-active" data-page="use-cases">
+      <div class="breadcrumb">
+        <span>Directory</span>
+        <span class="sep">/</span>
+        <span class="crumb-active">All Use Cases</span>
+      </div>
+
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">Every use case,<br/>from launch to scale</h1>
+          <p class="page-sub">
+            Whatever you're trying to do — ship your app, monetize, onboard, retain, or grow — Mantle has a ready-made path for it.
+          </p>
+        </div>
+      </header>
+
+      <section class="grid">
+        <!-- CARD 1: Launch -->
+        <article class="card" data-nav="launch-app">
+          <div class="card-media"><span class="card-media-label">Launch visual</span></div>
+          <div class="card-body">
+            <div class="card-title">Launch your app</div>
+            <div class="card-desc">Ship a production-ready product with the core systems already wired in.</div>
+            <div class="card-meta">5 Systems</div>
+          </div>
+        </article>
+
+        <!-- CARD 2: Monetize -->
+        <article class="card">
+          <div class="card-media"><span class="card-media-label">Monetize visual</span></div>
+          <div class="card-body">
+            <div class="card-title">Monetize your product</div>
+            <div class="card-desc">Turn engagement into revenue with pricing, billing, and upgrade flows built in.</div>
+            <div class="card-meta">Billing · Analytics</div>
+          </div>
+        </article>
+
+        <!-- CARD 3: Onboard -->
+        <article class="card">
+          <div class="card-media"><span class="card-media-label">Onboarding visual</span></div>
+          <div class="card-body">
+            <div class="card-title">Onboard and activate users</div>
+            <div class="card-desc">Guide new users to their first value moment with sequenced flows.</div>
+            <div class="card-meta">Messaging · Customers</div>
+          </div>
+        </article>
+
+        <!-- CARD 4: Engage -->
+        <article class="card">
+          <div class="card-media"><span class="card-media-label">Engagement visual</span></div>
+          <div class="card-body">
+            <div class="card-title">Engage and retain users</div>
+            <div class="card-desc">Trigger smart nudges, in-product moments, and lifecycle campaigns.</div>
+            <div class="card-meta">Messaging · Automations</div>
+          </div>
+        </article>
+
+        <!-- CARD 5: Understand data -->
+        <article class="card">
+          <div class="card-media"><span class="card-media-label">Data visual</span></div>
+          <div class="card-body">
+            <div class="card-title">Understand your data</div>
+            <div class="card-desc">See who's converting, where friction lives, and what drives revenue.</div>
+            <div class="card-meta">Analytics</div>
+          </div>
+        </article>
+
+        <!-- CARD 6: Grow -->
+        <article class="card">
+          <div class="card-media"><span class="card-media-label">Growth visual</span></div>
+          <div class="card-body">
+            <div class="card-title">Grow your app</div>
+            <div class="card-desc">Scale reach with referrals, invites, and multi-channel distribution.</div>
+            <div class="card-meta">Customers · Automations</div>
+          </div>
+        </article>
+      </section>
+
+    </section>
+
+    <!-- ═══════════ PAGE: Customers ═══════════ -->
+    <section class="page" data-page="customers" data-layout="wide">
+      <div class="uc-container">
+        <div class="breadcrumb">
+          <a data-nav="systems">Core Systems</a>
+          <span class="sep">/</span>
+          <span class="crumb-active">Customers</span>
+        </div>
+
+        <header class="uc-hero">
+          <h1 class="uc-title">Every customer in one profile — connected to every system you run</h1>
+          <p class="uc-sub">Unified profiles, real-time lifecycle tracking, and flexible segmentation. The source of truth for every user.</p>
+          <div class="uc-cta-row">
+            <a class="btn btn-primary">Get started for free <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="btn btn-ghost">View setup guide <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+          </div>
+        </header>
+
+        <!-- From signup → loyal customer -->
+        <section class="uc-section">
+          <h2 class="uc-h2">From signup → loyal customer</h2>
+          <p class="uc-h2-sub">Four phases, one system.</p>
+          <div class="uc-step-grid">
+            <article class="uc-step">
+              <div class="uc-step-num">01 · Capture</div>
+              <div class="uc-step-title">Every user starts as a unified profile</div>
+              <ul class="uc-step-list">
+                <li>Automatic profile creation on signup</li>
+                <li>Dedupe across auth, email, and events</li>
+                <li>One record per real person</li>
+              </ul>
+            </article>
+            <article class="uc-step">
+              <div class="uc-step-num">02 · Enrich</div>
+              <div class="uc-step-title">Attach the data that matters</div>
+              <ul class="uc-step-list">
+                <li>Traits, attributes, and custom fields</li>
+                <li>Revenue, plan, and billing state</li>
+                <li>Event history from every system</li>
+              </ul>
+            </article>
+            <article class="uc-step">
+              <div class="uc-step-num">03 · Track</div>
+              <div class="uc-step-title">Watch the lifecycle in real time</div>
+              <ul class="uc-step-list">
+                <li>Signup → active → paid → churned</li>
+                <li>Automatic stage transitions</li>
+                <li>Time-to-value for every cohort</li>
+              </ul>
+            </article>
+            <article class="uc-step">
+              <div class="uc-step-num">04 · Segment</div>
+              <div class="uc-step-title">Group customers however you need</div>
+              <ul class="uc-step-list">
+                <li>Segment by any trait or behavior</li>
+                <li>Live updates as users qualify</li>
+                <li>Power messaging, offers, and flows</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <!-- Real workflows -->
+        <section class="uc-section">
+          <h2 class="uc-h2">Real workflows</h2>
+          <p class="uc-h2-sub">From first signup to ongoing retention.</p>
+          <div class="uc-workflow">
+
+            <!-- Workflow 1 -->
+            <article class="uc-workflow-row">
+              <div class="uc-workflow-copy">
+                <h3>One profile per customer</h3>
+                <ul class="uc-workflow-features">
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Unified on signup</div>
+                      <div class="uc-workflow-feature-desc">Every new user becomes a single profile automatically — no ingestion pipelines, no duplicate records, no manual cleanup.</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Traits &amp; attributes</div>
+                      <div class="uc-workflow-feature-desc">Store any data you care about — plan, referrer, onboarding step — and query it anywhere in the product.</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v4H4z"/><path d="M4 10h16v10H4z"/><path d="M8 14h4"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Shared across systems</div>
+                      <div class="uc-workflow-feature-desc">Billing, messaging, analytics, and automations all read and write to the same customer record — no sync jobs.</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="uc-workflow-visual">
+                <div class="uc-workflow-mock">
+                  <div class="uc-workflow-mock-head">
+                    <strong>Profile</strong>
+                    <div class="uc-workflow-mock-avatar"></div>
+                  </div>
+                  <div class="uc-workflow-mock-row"><span class="label">Email:</span><span class="val">sarah@acme.com</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Lifecycle:</span><span class="uc-workflow-mock-badge">Active</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Plan:</span><span class="val">Pro · monthly</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">LTV:</span><span class="val">$1,284</span></div>
+                  <div class="uc-workflow-mock-cta">
+                    <span class="uc-workflow-mock-cta-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></span>
+                    <span>View full profile</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Workflow 2 (reversed) -->
+            <article class="uc-workflow-row reverse">
+              <div class="uc-workflow-copy">
+                <h3>Real-time lifecycle tracking</h3>
+                <ul class="uc-workflow-features">
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m7 14 4-4 4 4 5-5"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Stage transitions</div>
+                      <div class="uc-workflow-feature-desc">Customers move from new → active → paid → churned automatically, based on events that already flow through Mantle.</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Time-to-value</div>
+                      <div class="uc-workflow-feature-desc">Watch activation speed, upgrade latency, and retention curves without stitching together three separate tools.</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Live pulse</div>
+                      <div class="uc-workflow-feature-desc">Every state change streams in real time — perfect for triggering onboarding, win-back, or expansion moments.</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="uc-workflow-visual">
+                <div class="uc-workflow-mock">
+                  <div class="uc-workflow-mock-head">
+                    <strong>Lifecycle</strong>
+                    <span class="uc-workflow-mock-badge">Live</span>
+                  </div>
+                  <div class="uc-workflow-mock-row"><span class="label">New</span><span class="val">412</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Active</span><span class="val">1,248</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Paid</span><span class="val">287</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Churn risk</span><span class="val">34</span></div>
+                  <div class="uc-workflow-mock-cta">
+                    <span class="uc-workflow-mock-cta-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+                    <span>Explore cohorts</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Workflow 3 -->
+            <article class="uc-workflow-row">
+              <div class="uc-workflow-copy">
+                <h3>Flexible segmentation</h3>
+                <ul class="uc-workflow-features">
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><circle cx="17" cy="11" r="3"/><path d="M3 21v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1"/><path d="M17 21v-1a3 3 0 0 1 3-3h1"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Any trait, any event</div>
+                      <div class="uc-workflow-feature-desc">Build segments from any attribute or behavior — "signed up last 7 days," "hit paywall twice," "never opened the app."</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Power every surface</div>
+                      <div class="uc-workflow-feature-desc">Point segments at campaigns, in-app messages, pricing experiments, or automations — no glue code required.</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/><path d="M3 12h18"/><path d="M12 3a14.5 14.5 0 0 1 0 18"/><path d="M12 3a14.5 14.5 0 0 0 0 18"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Always live</div>
+                      <div class="uc-workflow-feature-desc">Segments update in real time as users qualify or drop out — your messaging always hits the right audience.</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="uc-workflow-visual">
+                <div class="uc-workflow-mock">
+                  <div class="uc-workflow-mock-head">
+                    <strong>Segment</strong>
+                    <span class="uc-workflow-mock-badge">Live</span>
+                  </div>
+                  <div class="uc-workflow-mock-row"><span class="label">Name:</span><span class="val">Paid · inactive 7d</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Users:</span><span class="val">1,284</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Rule:</span><span class="val">plan = pro</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">And:</span><span class="val">last_seen &gt; 7d</span></div>
+                  <div class="uc-workflow-mock-cta">
+                    <span class="uc-workflow-mock-cta-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+                    <span>Send win-back campaign</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- Setup guides -->
+        <section class="uc-section">
+          <h2 class="uc-h2">Setup guides</h2>
+          <p class="uc-h2-sub">Step-by-step walkthroughs from the team.</p>
+          <div class="uc-guides">
+            <a class="uc-guide"><span class="uc-guide-title">How to set up customer profiles</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="uc-guide"><span class="uc-guide-title">How to define custom traits and attributes</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="uc-guide"><span class="uc-guide-title">How to map your lifecycle stages</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="uc-guide"><span class="uc-guide-title">How to build your first segment</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="uc-guide"><span class="uc-guide-title">How to sync attributes from your app</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="uc-guide"><span class="uc-guide-title">How to track churn and win-back opportunities</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+          </div>
+        </section>
+
+        <!-- Powered by Mantle -->
+        <section class="uc-section">
+          <h2 class="uc-h2">Connected to every other system</h2>
+          <p class="uc-h2-sub">Customers is the source of truth that ties it all together.</p>
+          <div class="uc-pillars">
+            <a class="uc-pillar" data-nav="systems">
+              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="14" x="2" y="5" rx="2"/>
+                <line x1="2" x2="22" y1="10" y2="10"/>
+              </svg>
+              <div class="uc-pillar-title">Billing</div>
+              <div class="uc-pillar-desc">Every subscription and payment ties back to a customer.</div>
+            </a>
+            <a class="uc-pillar" data-nav="systems">
+              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+              <div class="uc-pillar-title">Messaging</div>
+              <div class="uc-pillar-desc">Target segments with lifecycle and campaign sends.</div>
+            </a>
+            <a class="uc-pillar" data-nav="systems">
+              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
+                <path d="m19 9-5 5-4-4-3 3"/>
+              </svg>
+              <div class="uc-pillar-title">Analytics</div>
+              <div class="uc-pillar-desc">Track conversion, retention, and LTV per cohort.</div>
+            </a>
+            <a class="uc-pillar" data-nav="systems">
+              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.5 8 5 12l4.5 4"/>
+                <path d="m14.5 8 4.5 4-4.5 4"/>
+                <path d="M13 4 11 20"/>
+              </svg>
+              <div class="uc-pillar-title">Automations</div>
+              <div class="uc-pillar-desc">Trigger workflows on lifecycle or behavioral events.</div>
+            </a>
+          </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="uc-final-cta">
+          <h2>Put every customer in one place</h2>
+          <p>Unified profiles, real-time lifecycle, and flexible segmentation — all powered by the same system.</p>
+          <a class="btn btn-primary">Get started for free <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+        </section>
+      </div>
+    </section>
+
+    <!-- ═══════════ PAGE: Use case — Launch your app ═══════════ -->
+    <section class="page" data-page="launch-app" data-layout="wide">
+      <div class="uc-container">
+        <div class="breadcrumb">
+          <a data-nav="use-cases">Use Cases</a>
+          <span class="sep">/</span>
+          <span class="crumb-active">Launch your app</span>
+        </div>
+
+        <header class="uc-hero">
+          <h1 class="uc-title">Go from idea to live product — with users, onboarding, and tracking in place</h1>
+          <p class="uc-sub">Set up customers, onboarding, messaging, and analytics so your launch actually converts.</p>
+          <div class="uc-cta-row">
+            <a class="btn btn-primary">Get started for free <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="btn btn-ghost">View setup guide <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+          </div>
+        </header>
+
+        <!-- From idea → launched app -->
+        <section class="uc-section">
+          <h2 class="uc-h2">From idea → launched app</h2>
+          <p class="uc-h2-sub">Four phases, one system.</p>
+          <div class="uc-step-grid">
+            <article class="uc-step">
+              <div class="uc-step-num">01 · Capture early users</div>
+              <div class="uc-step-title">Start collecting interest before you launch</div>
+              <ul class="uc-step-list">
+                <li>Set up a waitlist</li>
+                <li>Capture emails and user data</li>
+                <li>Store early user profiles</li>
+              </ul>
+            </article>
+            <article class="uc-step">
+              <div class="uc-step-num">02 · Prepare your launch</div>
+              <div class="uc-step-title">Get your product ready for real users</div>
+              <ul class="uc-step-list">
+                <li>Create onboarding flows</li>
+                <li>Set up lifecycle messaging</li>
+                <li>Segment your early users</li>
+              </ul>
+            </article>
+            <article class="uc-step">
+              <div class="uc-step-num">03 · Go live</div>
+              <div class="uc-step-title">Launch publicly and bring users in</div>
+              <ul class="uc-step-list">
+                <li>Send launch announcements</li>
+                <li>Trigger onboarding automatically</li>
+                <li>Track user signups</li>
+              </ul>
+            </article>
+            <article class="uc-step">
+              <div class="uc-step-num">04 · Track what happens</div>
+              <div class="uc-step-title">Understand how users behave after launch</div>
+              <ul class="uc-step-list">
+                <li>Track signup → activation</li>
+                <li>Monitor early usage</li>
+                <li>Identify drop-off points</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <!-- Real workflows -->
+        <section class="uc-section">
+          <h2 class="uc-h2">Real workflows</h2>
+          <p class="uc-h2-sub">From first user to ongoing growth.</p>
+          <div class="uc-workflow">
+
+            <!-- Workflow 1 -->
+            <article class="uc-workflow-row">
+              <div class="uc-workflow-copy">
+                <h3>Capture and track new users</h3>
+                <ul class="uc-workflow-features">
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Profiles on signup</div>
+                      <div class="uc-workflow-feature-desc">New users automatically get a unified profile — no ingestion pipelines, no duplicate records, no manual cleanup.</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">User attributes &amp; metadata</div>
+                      <div class="uc-workflow-feature-desc">Store any data you care about — plan, referrer, onboarding step — and query it anywhere in the product.</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Lifecycle tracking</div>
+                      <div class="uc-workflow-feature-desc">Watch users move from new → active → paid → churned, all in one view your whole team can use.</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="uc-workflow-visual">
+                <div class="uc-workflow-mock">
+                  <div class="uc-workflow-mock-head">
+                    <strong>Profile</strong>
+                    <div class="uc-workflow-mock-avatar"></div>
+                  </div>
+                  <div class="uc-workflow-mock-row"><span class="label">Email:</span><span class="val">sarah@acme.com</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Lifecycle:</span><span class="uc-workflow-mock-badge">Active</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Plan:</span><span class="val">Pro · monthly</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Joined:</span><span class="val">14 days ago</span></div>
+                  <div class="uc-workflow-mock-cta">
+                    <span class="uc-workflow-mock-cta-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></span>
+                    <span>View full profile</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Workflow 2 (reversed) -->
+            <article class="uc-workflow-row reverse">
+              <div class="uc-workflow-copy">
+                <h3>Segment users for messaging</h3>
+                <ul class="uc-workflow-features">
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><circle cx="17" cy="11" r="3"/><path d="M3 21v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1"/><path d="M17 21v-1a3 3 0 0 1 3-3h1"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Group by behavior</div>
+                      <div class="uc-workflow-feature-desc">Build segments from any attribute or event — "signed up last 7 days," "hit paywall twice," "never opened the app."</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Wire to campaigns</div>
+                      <div class="uc-workflow-feature-desc">Point any segment at an onboarding sequence, re-engagement email, or in-app nudge — no glue code required.</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/><path d="M3 12h18"/><path d="M12 3a14.5 14.5 0 0 1 0 18"/><path d="M12 3a14.5 14.5 0 0 0 0 18"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Live sync, everywhere</div>
+                      <div class="uc-workflow-feature-desc">Segments update in real time as users qualify or drop out — your messaging always hits the right audience.</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="uc-workflow-visual">
+                <div class="uc-workflow-mock">
+                  <div class="uc-workflow-mock-head">
+                    <strong>Segment</strong>
+                    <span class="uc-workflow-mock-badge">Live</span>
+                  </div>
+                  <div class="uc-workflow-mock-row"><span class="label">Name:</span><span class="val">Paid · inactive 7d</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Users:</span><span class="val">1,284</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">Rule:</span><span class="val">plan = pro</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">And:</span><span class="val">last_seen &gt; 7d</span></div>
+                  <div class="uc-workflow-mock-cta">
+                    <span class="uc-workflow-mock-cta-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+                    <span>Send win-back campaign</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Workflow 3 -->
+            <article class="uc-workflow-row">
+              <div class="uc-workflow-copy">
+                <h3>Track user activity in real time</h3>
+                <ul class="uc-workflow-features">
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M2 15h10"/><path d="m9 18 3-3-3-3"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Key event logging</div>
+                      <div class="uc-workflow-feature-desc">Capture signup, activation, upgrade, churn — and every custom event that matters to your product.</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Lifecycle progression</div>
+                      <div class="uc-workflow-feature-desc">See activation rates, time-to-value, and retention curves without stitching together three separate tools.</div>
+                    </div>
+                  </li>
+                  <li class="uc-workflow-feature">
+                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 8 5 12l4.5 4"/><path d="m14.5 8 4.5 4-4.5 4"/><path d="M13 4 11 20"/></svg>
+                    <div>
+                      <div class="uc-workflow-feature-title">Behavior-driven automations</div>
+                      <div class="uc-workflow-feature-desc">Trigger workflows the moment a user hits (or misses) a milestone — no overnight batch jobs, no lag.</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="uc-workflow-visual">
+                <div class="uc-workflow-mock">
+                  <div class="uc-workflow-mock-head">
+                    <strong>Activity</strong>
+                    <span class="uc-workflow-mock-badge">Live</span>
+                  </div>
+                  <div class="uc-workflow-mock-row"><span class="label">signup</span><span class="val">2 min ago</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">first_session</span><span class="val">1 min ago</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">activation</span><span class="val">just now</span></div>
+                  <div class="uc-workflow-mock-row"><span class="label">upgrade</span><span class="val">—</span></div>
+                  <div class="uc-workflow-mock-cta">
+                    <span class="uc-workflow-mock-cta-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+                    <span>Automation armed: 3 triggers</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- Setup guides -->
+        <section class="uc-section">
+          <h2 class="uc-h2">Setup guides</h2>
+          <p class="uc-h2-sub">Step-by-step walkthroughs from the team.</p>
+          <div class="uc-guides">
+            <a class="uc-guide"><span class="uc-guide-title">How to set up your app in Mantle</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="uc-guide"><span class="uc-guide-title">How to set up a waitlist flow</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="uc-guide"><span class="uc-guide-title">How to capture early users</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="uc-guide"><span class="uc-guide-title">How to create onboarding flows</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="uc-guide"><span class="uc-guide-title">How to send launch emails</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+            <a class="uc-guide"><span class="uc-guide-title">How to track activation and early usage</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+          </div>
+        </section>
+
+        <!-- Powered by Mantle -->
+        <section class="uc-section">
+          <h2 class="uc-h2">Powered by Mantle</h2>
+          <p class="uc-h2-sub">The core systems working behind every launch.</p>
+          <div class="uc-pillars">
+            <a class="uc-pillar" data-nav="systems">
+              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="14" x="2" y="5" rx="2"/>
+                <line x1="2" x2="22" y1="10" y2="10"/>
+              </svg>
+              <div class="uc-pillar-title">Billing</div>
+              <div class="uc-pillar-desc">Link customers to subscriptions and payments.</div>
+            </a>
+            <a class="uc-pillar" data-nav="systems">
+              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+              <div class="uc-pillar-title">Messaging</div>
+              <div class="uc-pillar-desc">Send emails and campaigns to specific segments.</div>
+            </a>
+            <a class="uc-pillar" data-nav="systems">
+              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.5 8 5 12l4.5 4"/>
+                <path d="m14.5 8 4.5 4-4.5 4"/>
+                <path d="M13 4 11 20"/>
+              </svg>
+              <div class="uc-pillar-title">Automations</div>
+              <div class="uc-pillar-desc">Trigger workflows based on customer behavior.</div>
+            </a>
+            <a class="uc-pillar" data-nav="systems">
+              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
+                <path d="m19 9-5 5-4-4-3 3"/>
+              </svg>
+              <div class="uc-pillar-title">Analytics</div>
+              <div class="uc-pillar-desc">Track lifecycle, conversion, and retention.</div>
+            </a>
+          </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="uc-final-cta">
+          <h2>Ship your product with real users ready</h2>
+          <p>Set up customers, onboarding, messaging, and analytics — so your launch actually converts.</p>
+          <a class="btn btn-primary">Get started for free <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+        </section>
+      </div>
+    </section>
+
+    <!-- ═══════════ PAGE: Compass (resource hub, dark mode) ═══════════ -->
+    <section class="page compass" data-page="compass" data-layout="wide">
+      <div class="compass-container">
+
+        <!-- Hero -->
+        <div class="compass-hero">
+          <div class="compass-hero-text">
+            <h1>Compass</h1>
+            <p>Everything you need to know to go from zero to building production-ready internal apps, agents, and workflows with Mantle.</p>
+          </div>
+          <div class="compass-hero-graphic"></div>
+        </div>
+
+        <!-- Section navigation -->
+        <nav class="compass-nav" aria-label="Compass sections">
+          <a class="active" data-count="24">Start here</a>
+          <a data-count="18">Validate</a>
+          <a data-count="42">Build</a>
+          <a data-count="15">Launch</a>
+          <a data-count="31">Grow</a>
+          <a data-count="22">Operate</a>
+        </nav>
+
+        <!-- Featured collections split -->
+        <div class="compass-feature">
+          <div class="compass-feature-visual">
+            <span class="compass-feature-visual-label">Feature visual</span>
+          </div>
+          <div class="compass-feature-list">
+            <a class="compass-feature-item">
+              <div>
+                <div class="compass-feature-item-kicker">Collection 01</div>
+                <div class="compass-feature-item-title">Getting started</div>
+              </div>
+              <div class="compass-feature-item-desc">New to Mantle? Learn how to build your first internal app, connect data sources, and master the basics.</div>
+            </a>
+            <a class="compass-feature-item">
+              <div>
+                <div class="compass-feature-item-kicker">Collection 02</div>
+                <div class="compass-feature-item-title">Build with AI</div>
+              </div>
+              <div class="compass-feature-item-desc">Learn how to build agents, AI-powered workflows, and full-stack applications with AI-assisted development.</div>
+            </a>
+            <a class="compass-feature-item">
+              <div>
+                <div class="compass-feature-item-kicker">Collection 03</div>
+                <div class="compass-feature-item-title">Agents &amp; workflows</div>
+              </div>
+              <div class="compass-feature-item-desc">Build workflows that trigger actions across your tools, and create AI agents that handle tasks autonomously.</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Explore more ways to learn -->
+        <section class="compass-explore">
+          <h2>Explore more ways to learn</h2>
+          <div class="compass-explore-grid">
+            <a class="compass-explore-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+              <span>Blog posts</span>
+            </a>
+            <a class="compass-explore-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="m10 9 5 3-5 3V9z" fill="currentColor"/></svg>
+              <span>Videos</span>
+            </a>
+            <a class="compass-explore-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3-3 7-3 9 0"/><circle cx="12" cy="7" r="4"/><path d="M19 9l2 2"/><path d="M21 7l-2 2"/></svg>
+              <span>Customer stories</span>
+            </a>
+            <a class="compass-explore-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+              <span>Integrations</span>
+            </a>
+            <a class="compass-explore-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+              <span>Mantle University</span>
+            </a>
+            <a class="compass-explore-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>
+              <span>Docs</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Latest from Compass's blog -->
+        <section class="compass-blog">
+          <h2>The latest from Compass's blog</h2>
+          <div class="compass-blog-grid">
+            <article class="compass-blog-feature">
+              <div class="compass-blog-feature-media"></div>
+              <div class="compass-blog-feature-title">Introducing enterprise AppGen: Software that starts with a sentence and ends in production</div>
+              <div class="compass-blog-feature-byline">By David Hsu</div>
+              <span class="compass-blog-tag">Getting started</span>
+            </article>
+            <div class="compass-blog-side">
+              <article class="compass-blog-item">
+                <div>
+                  <div class="compass-blog-item-title">The building revolution: 2026 builder report</div>
+                  <div class="compass-blog-item-byline">By Kelsey McKeon</div>
+                </div>
+                <div class="compass-blog-item-thumb"></div>
+              </article>
+              <article class="compass-blog-item">
+                <div>
+                  <div class="compass-blog-item-title">Lessons from four days of AI-assisted app development in Mantle</div>
+                  <div class="compass-blog-item-byline">By Sarah Sherman</div>
+                </div>
+                <div class="compass-blog-item-thumb"></div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- Newsletter + community -->
+        <section class="compass-connect">
+          <div class="compass-news">
+            <h3>Subscribe to our newsletter to receive monthly updates</h3>
+            <div class="compass-news-form">
+              <div class="compass-news-label">Email *</div>
+              <div class="compass-news-row">
+                <input class="compass-news-input" type="email" placeholder="Enter your email" />
+                <button class="compass-news-submit">Submit</button>
+              </div>
+              <div class="compass-news-legal">By clicking "Submit", you agree to opt in to Mantle's mailing list and agree to our ToS and Privacy Policy.</div>
+            </div>
+          </div>
+          <div class="compass-community">
+            <h4>Connect with the Mantle community:</h4>
+            <div class="compass-community-icons">
+              <a class="compass-community-icon" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></a>
+              <a class="compass-community-icon" aria-label="X"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M20 4L4 20"/></svg></a>
+              <a class="compass-community-icon" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z" fill="currentColor"/></svg></a>
+              <a class="compass-community-icon" aria-label="Discord"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></a>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+    <!-- ═══════════ PAGE: All systems ═══════════ -->
+    <section class="page" data-page="systems">
+      <div class="breadcrumb">
+        <span>Directory</span>
+        <span class="sep">/</span>
+        <span class="crumb-active">Core Systems</span>
+      </div>
+
+      <header class="page-header">
+        <div>
+          <h1 class="page-title">The systems that<br/>power your product</h1>
+          <p class="page-sub">
+            Eight core systems, built to work together — customers, billing, messaging, analytics, and more. Every system talks to every other one by default.
+          </p>
+        </div>
+      </header>
+
+      <div class="section-label">All systems</div>
+
+      <section class="grid">
+        <!-- Customers -->
+        <article class="card" data-nav="customers" style="cursor:pointer;">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <div class="card-body">
+            <div class="card-title">Customers</div>
+            <div class="card-desc">Profiles, lifecycle, segmentation — one source of truth for every user.</div>
+            <div class="card-meta">4 Features</div>
+          </div>
+        </article>
+
+        <!-- Billing -->
+        <article class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="14" x="2" y="5" rx="2"/>
+            <line x1="2" x2="22" y1="10" y2="10"/>
+          </svg>
+          <div class="card-body">
+            <div class="card-title">Billing</div>
+            <div class="card-desc">Plans, subscriptions, invoices, and revenue events in one pipeline.</div>
+            <div class="card-meta">6 Features</div>
+          </div>
+        </article>
+
+        <!-- Email + messaging -->
+        <article class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="16" x="2" y="4" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          <div class="card-body">
+            <div class="card-title">Email + messaging</div>
+            <div class="card-desc">Lifecycle email, in-app messages, and campaigns across every surface.</div>
+            <div class="card-meta">5 Features</div>
+          </div>
+        </article>
+
+        <!-- Analytics -->
+        <article class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
+            <path d="m19 9-5 5-4-4-3 3"/>
+          </svg>
+          <div class="card-body">
+            <div class="card-title">Analytics</div>
+            <div class="card-desc">Acquisition, retention, and revenue insights — no pipeline to wire.</div>
+            <div class="card-meta">7 Features</div>
+          </div>
+        </article>
+
+        <!-- Automations -->
+        <article class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.5 8 5 12l4.5 4"/>
+            <path d="m14.5 8 4.5 4-4.5 4"/>
+            <path d="M13 4 11 20"/>
+          </svg>
+          <div class="card-body">
+            <div class="card-title">Automations</div>
+            <div class="card-desc">Triggers, workflows, and routing that react to any event in your app.</div>
+            <div class="card-meta">8 Features</div>
+          </div>
+        </article>
+
+        <!-- Sales -->
+        <article class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
+            <path d="M7 14V9"/>
+            <path d="M11 14V6"/>
+            <path d="M15 14v-3"/>
+            <path d="M19 14V8"/>
+          </svg>
+          <div class="card-body">
+            <div class="card-title">Sales</div>
+            <div class="card-desc">Leads, pipeline, and conversion signals connected to your product data.</div>
+            <div class="card-meta">5 Features</div>
+          </div>
+        </article>
+
+        <!-- Partnerships -->
+        <article class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 17a4 4 0 0 1-8 0V8a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2Z"/>
+            <path d="M21 17a4 4 0 0 1-8 0V8a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2Z"/>
+            <path d="M11 12h10"/>
+          </svg>
+          <div class="card-body">
+            <div class="card-title">Partnerships</div>
+            <div class="card-desc">Affiliates, referrals, and distribution tracked end to end.</div>
+            <div class="card-meta">4 Features</div>
+          </div>
+        </article>
+
+        <!-- Support -->
+        <article class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <div class="card-body">
+            <div class="card-title">Support</div>
+            <div class="card-desc">Tickets, help docs, and AI responses — all with customer context.</div>
+            <div class="card-meta">6 Features</div>
+          </div>
+        </article>
+      </section>
+    </section>
+
+    </main>
+  </div>
+
+  <script>
+    // Inject grain + glow layers into every card, plus mouse-tracked highlight
+    document.querySelectorAll('.card').forEach(card => {
+      const grain = document.createElement('div');
+      grain.className = 'card-grain';
+      const glow = document.createElement('div');
+      glow.className = 'card-glow';
+      card.prepend(glow);
+      card.prepend(grain);
+
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+        card.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100) + '%');
+      });
+    });
+
+    // ── Page routing ──
+    const pages    = document.querySelectorAll('.page');
+    const navItems = document.querySelectorAll('.nav-item[data-page]');
+
+    function showPage(name, clickedEl) {
+      let wide = false;
+      pages.forEach(p => {
+        const active = p.dataset.page === name;
+        p.classList.toggle('is-active', active);
+        if (active && p.dataset.layout === 'wide') wide = true;
+      });
+      document.body.classList.toggle('layout-wide', wide);
+      navItems.forEach(n => n.classList.remove('active'));
+      if (clickedEl) clickedEl.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      if (location.hash.slice(1) !== name) history.replaceState(null, '', '#' + name);
+    }
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => showPage(item.dataset.page, item));
+    });
+
+    // Also route on anything with data-nav (breadcrumbs, cards, etc.)
+    document.querySelectorAll('[data-nav]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const name = el.dataset.nav;
+        const match = document.querySelector(`.nav-item[data-page="${name}"]`);
+        showPage(name, match);
+      });
+    });
+
+    // Initial route from hash
+    const initial = location.hash.slice(1);
+    if (initial) {
+      const match = document.querySelector(`.nav-item[data-page="${initial}"]`);
+      if (match) showPage(initial, match);
+    }
+  </script>
+</body>
+</html>

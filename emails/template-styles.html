@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Kit - Template Styles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Inter, 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #FFF8F3; color: #1a1a1a; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 60px 24px; }
+    h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; text-align: center; }
+    .subtitle { font-size: 18px; color: #606060; text-align: center; margin-bottom: 48px; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .card { background: #FFFFFF; border: 1px solid #eb4c2e; border-radius: 12px; overflow: hidden; }
+    .card-image { width: 100%; height: 400px; background: #f0ebe6; display: flex; align-items: center; justify-content: center; color: #999; font-size: 14px; }
+    .card-body { padding: 20px; }
+    .card-body h3 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .card-body p { font-size: 15px; color: #606060; }
+    .badge { display: inline-block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #eb4c2e; padding: 4px 12px; background: #eb4c2e1a; border-radius: 20px; margin-bottom: 8px; }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <span class="badge" style="display:block;text-align:center;margin-bottom:16px;">Choose your style</span>
+    <h1>Recipe templates</h1>
+    <p class="subtitle">Every recipe card is fully customizable. Pick the design that matches your brand.</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-image">
+          <!-- Replace with: <img src="https://yourdomain.com/images/template-uptown.png" width="100%" alt="Uptown Template"> -->
+          Uptown Template Preview
+        </div>
+        <div class="card-body">
+          <h3>Uptown</h3>
+          <p>Classic elegance with hero image</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-image">
+          <!-- Replace with: <img src="https://yourdomain.com/images/template-sunny.png" width="100%" alt="Sunny Template"> -->
+          Sunny Template Preview
+        </div>
+        <div class="card-body">
+          <h3>Sunny</h3>
+          <p>Bright, magazine-style layout</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-image">
+          <!-- Replace with: <img src="https://yourdomain.com/images/template-modern.png" width="100%" alt="Modern Template"> -->
+          Modern Template Preview
+        </div>
+        <div class="card-body">
+          <h3>Modern</h3>
+          <p>Clean, minimal aesthetic</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-image">
+          <!-- Replace with: <img src="https://yourdomain.com/images/template-modern-vertical.png" width="100%" alt="Modern Vertical Template"> -->
+          Modern Vertical Preview
+        </div>
+        <div class="card-body">
+          <h3>Modern Vertical</h3>
+          <p>Premium horizontal layout</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1440, initial-scale=1">
+  <title>Visual Identity</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #E8DDD0;
+      font-family: 'Manrope', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 48px;
+    }
+
+    /* 16:9 container */
+    .page {
+      width: 100%;
+      max-width: 1360px;
+      aspect-ratio: 16 / 9;
+      background: #F4EDE0;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Background geo ── */
+    .geo {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    /* ── Card base ── */
+    .card {
+      position: absolute;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(26,18,8,0.08), 0 8px 36px rgba(26,18,8,0.07);
+      padding: 28px 30px;
+    }
+
+    /* ── Colours card ── */
+    .card-colours {
+      width: 340px;
+      top: 310px;
+      left: 30px;
+      transform: rotate(-5.5deg);
+      z-index: 5;
+      padding: 24px 26px 20px;
+    }
+    .card-colours h2 { font-size: 26px; font-weight: 800; color: #1A1A1F; margin-bottom: 20px; }
+    .swatches { display: flex; gap: 8px; margin-bottom: 10px; }
+    .swatch { flex: 1; height: 100px; border-radius: 10px; }
+    .swatch-labels { display: flex; gap: 8px; }
+    .swatch-label { flex: 1; font-size: 8.5px; color: #9a8a7a; text-align: center; letter-spacing: 0.01em; }
+
+    /* ── Logo card ── */
+    .card-logo {
+      width: 420px;
+      height: 340px;
+      top: 24px;
+      left: 160px;
+      transform: rotate(3deg);
+      z-index: 3;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-big { font-size: 100px; font-weight: 800; color: #1A1A1F; letter-spacing: -0.04em; position: relative; z-index: 2; }
+
+    /* ── App icon card ── */
+    .card-m {
+      width: 156px;
+      height: 156px;
+      top: 24px;
+      left: 548px;
+      transform: rotate(-2deg);
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* ── Purple card ── */
+    .card-purple {
+      width: 220px;
+      height: 330px;
+      top: 60px;
+      left: 750px;
+      transform: rotate(4deg);
+      z-index: 2;
+      background: #CBB8E6;
+      padding: 0;
+    }
+
+    /* ── Fonts card ── */
+    .card-fonts {
+      width: 400px;
+      top: 200px;
+      left: 310px;
+      transform: rotate(-1.5deg);
+      z-index: 4;
+      padding: 28px 32px;
+    }
+    .card-fonts h2 { font-size: 26px; font-weight: 800; color: #1A1A1F; margin-bottom: 18px; }
+    .font-row { display: flex; align-items: center; gap: 20px; padding: 12px 0; border-bottom: 1px solid #f0ebe4; }
+    .font-row:last-of-type { border-bottom: none; }
+    .font-sample-big { font-size: 52px; font-weight: 700; color: #1A1A1F; letter-spacing: -0.02em; line-height: 1; min-width: 60px; }
+    .font-sample-small { font-size: 36px; font-weight: 400; color: #1A1A1F; letter-spacing: -0.01em; line-height: 1; min-width: 60px; }
+    .font-info { flex: 1; }
+    .font-name { font-size: 12.5px; font-weight: 700; color: #1A1A1F; margin-bottom: 2px; }
+    .font-role { font-size: 11px; color: #8a7a6a; margin-bottom: 3px; }
+    .font-tags { font-size: 10.5px; color: #a89880; }
+    .font-body-preview { margin-top: 18px; padding-top: 16px; border-top: 1px solid #f0ebe4; }
+    .font-body-preview h3 { font-size: 20px; font-weight: 700; color: #1A1A1F; margin-bottom: 6px; }
+    .font-body-preview p { font-size: 12px; color: #6b5f54; line-height: 1.5; font-weight: 400; }
+
+    /* ── Tone card ── */
+    .card-tone {
+      width: 220px;
+      top: 180px;
+      left: 800px;
+      transform: rotate(2.5deg);
+      z-index: 5;
+      padding: 26px 28px;
+    }
+    .card-tone h2 { font-size: 26px; font-weight: 800; color: #1A1A1F; margin-bottom: 18px; line-height: 1.1; }
+    .tone-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .tone-list li { font-size: 15px; color: #1A1A1F; font-weight: 400; }
+    .tone-underline { margin-top: 18px; height: 2.5px; width: 80px; background: #5A3D8A; border-radius: 2px; }
+
+    /* annotation */
+    .annot {
+      position: absolute;
+      font-family: 'Caveat', cursive;
+      font-size: 15px;
+      color: #8a7060;
+      line-height: 1.35;
+      text-align: center;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Background grid (left area) -->
+  <svg class="geo" style="bottom:30px;left:30px;width:240px;height:200px;opacity:0.1" viewBox="0 0 240 200" fill="none">
+    <line x1="0" y1="40" x2="240" y2="40" stroke="#1A1A1F" stroke-width="1"/>
+    <line x1="0" y1="80" x2="240" y2="80" stroke="#1A1A1F" stroke-width="1"/>
+    <line x1="0" y1="120" x2="240" y2="120" stroke="#1A1A1F" stroke-width="1"/>
+    <line x1="0" y1="160" x2="240" y2="160" stroke="#1A1A1F" stroke-width="1"/>
+    <line x1="40" y1="0" x2="40" y2="200" stroke="#1A1A1F" stroke-width="1"/>
+    <line x1="80" y1="0" x2="80" y2="200" stroke="#1A1A1F" stroke-width="1"/>
+    <line x1="120" y1="0" x2="120" y2="200" stroke="#1A1A1F" stroke-width="1"/>
+    <line x1="160" y1="0" x2="160" y2="200" stroke="#1A1A1F" stroke-width="1"/>
+    <line x1="200" y1="0" x2="200" y2="200" stroke="#1A1A1F" stroke-width="1"/>
+  </svg>
+
+  <!-- Crosshair -->
+  <svg class="geo" style="bottom:155px;left:38px;width:28px;height:28px;opacity:0.3" viewBox="0 0 28 28" fill="none">
+    <circle cx="14" cy="14" r="5" stroke="#1A1A1F" stroke-width="1.2"/>
+    <line x1="14" y1="0" x2="14" y2="8" stroke="#1A1A1F" stroke-width="1.2"/>
+    <line x1="14" y1="20" x2="14" y2="28" stroke="#1A1A1F" stroke-width="1.2"/>
+    <line x1="0" y1="14" x2="8" y2="14" stroke="#1A1A1F" stroke-width="1.2"/>
+    <line x1="20" y1="14" x2="28" y2="14" stroke="#1A1A1F" stroke-width="1.2"/>
+  </svg>
+
+  <!-- Decorative squares -->
+  <div class="geo" style="bottom:100px;left:180px;width:18px;height:18px;background:#5A3D8A;opacity:0.7;"></div>
+  <div class="geo" style="bottom:70px;left:240px;width:12px;height:12px;background:#FFBB53;"></div>
+  <!-- Gold line top-left -->
+  <div class="geo" style="top:52px;left:52px;width:34px;height:3px;background:#FFBB53;border-radius:2px;"></div>
+
+
+  <!-- Purple card (back) -->
+  <div class="card card-purple"></div>
+
+  <!-- Colours card -->
+  <div class="card card-colours">
+    <h2>Colours</h2>
+    <div class="swatches">
+      <div class="swatch" style="background:#FFBB53;"></div>
+      <div class="swatch" style="background:#F4EDE0;border:1px solid #e0d4c4;"></div>
+      <div class="swatch" style="background:#CBB8E6;"></div>
+      <div class="swatch" style="background:#5A3D8A;"></div>
+      <div class="swatch" style="background:#1A1A1F;"></div>
+    </div>
+    <div class="swatch-labels">
+      <div class="swatch-label">#FFBB53</div>
+      <div class="swatch-label">#F4EDE0</div>
+      <div class="swatch-label">#CBB8E6</div>
+      <div class="swatch-label">#5A3D8A</div>
+      <div class="swatch-label">#1A1A1F</div>
+    </div>
+  </div>
+
+  <!-- Logo card -->
+  <div class="card card-logo">
+    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.14" viewBox="0 0 340 300" fill="none">
+      <line x1="170" y1="0" x2="170" y2="300" stroke="#1A1A1F" stroke-width="0.8"/>
+      <line x1="0" y1="150" x2="340" y2="150" stroke="#1A1A1F" stroke-width="0.8"/>
+      <circle cx="170" cy="150" r="86" stroke="#1A1A1F" stroke-width="0.8"/>
+      <circle cx="170" cy="150" r="50" stroke="#1A1A1F" stroke-width="0.8"/>
+      <line x1="109" y1="89" x2="231" y2="211" stroke="#1A1A1F" stroke-width="0.6"/>
+      <line x1="231" y1="89" x2="109" y2="211" stroke="#1A1A1F" stroke-width="0.6"/>
+      <rect x="40" y="36" width="260" height="228" stroke="#1A1A1F" stroke-width="0.6" fill="none"/>
+    </svg>
+    <span class="logo-big">Logo</span>
+  </div>
+
+  <!-- App icon card -->
+  <div class="card card-m">
+    <svg width="116" height="116" viewBox="0 0 116 116" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="iconGrad" x1="0" y1="0" x2="116" y2="116" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#2C1A6E"/>
+          <stop offset="100%" stop-color="#0F0A2A"/>
+        </linearGradient>
+        <linearGradient id="markGrad" x1="20" y1="30" x2="96" y2="90" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#FFDD80"/>
+          <stop offset="100%" stop-color="#FFAA30"/>
+        </linearGradient>
+      </defs>
+      <!-- App icon rounded square bg -->
+      <rect width="116" height="116" rx="26" fill="url(#iconGrad)"/>
+      <!-- Subtle inner glow -->
+      <rect x="1" y="1" width="114" height="114" rx="25" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none"/>
+      <!-- Minimal mark: two overlapping rounded rectangles -->
+      <rect x="28" y="38" width="36" height="44" rx="8" fill="url(#markGrad)" opacity="0.95"/>
+      <rect x="52" y="30" width="36" height="44" rx="8" fill="url(#markGrad)" opacity="0.6"/>
+      <!-- Small dot accent -->
+      <circle cx="80" cy="80" r="5" fill="#FFDD80" opacity="0.8"/>
+    </svg>
+  </div>
+
+  <!-- Fonts card -->
+  <div class="card card-fonts">
+    <h2>Fonts</h2>
+    <div class="font-row">
+      <div class="font-sample-big">Aa</div>
+      <div class="font-info">
+        <div class="font-name">Manrope SemiBold</div>
+        <div class="font-role">Heading</div>
+        <div class="font-tags">Bold · Modern · Clean</div>
+      </div>
+    </div>
+    <div class="font-row" style="border-bottom:none">
+      <div class="font-sample-small">Aa</div>
+      <div class="font-info">
+        <div class="font-name">Manrope Regular</div>
+        <div class="font-role">Body text</div>
+        <div class="font-tags">Readable · Neutral · Friendly</div>
+      </div>
+    </div>
+    <div class="font-body-preview">
+      <h3>Build better products</h3>
+      <p>We help early-stage teams ship faster with<br>clarity, focus and a strong foundation.</p>
+    </div>
+  </div>
+
+  <!-- Tone of voice card -->
+  <div class="card card-tone">
+    <h2>Tone<br>of voice</h2>
+    <ul class="tone-list">
+      <li>Clear</li>
+      <li>Human</li>
+      <li>Confident</li>
+      <li>Helpful</li>
+      <li>No fluff</li>
+    </ul>
+    <div class="tone-underline"></div>
+  </div>
+
+</div>
+
+</body>
+</html>

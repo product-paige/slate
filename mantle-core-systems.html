@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mantle — Core Systems</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --canvas:         #0a0810;
+      --surface:        #110f17;
+      --surface-raised: #16141d;
+      --border-soft:    #ffffff10;
+      --text-primary:   #f4f2ee;
+      --text-secondary: #d8d6d0;
+      --text-muted:     #8d8a97;
+      --text-label:     #595668;
+      --gold:           #ffbb53;
+      --gold-dim:       #f5ac3d;
+      --gold-high:      #ffc66e;
+      --gold-soft:      rgba(255, 187, 83, 0.08);
+      --ease:           cubic-bezier(0.2, 0, 0, 1);
+      --t-fast:         150ms;
+      --t-base:         260ms;
+      --header-h:       64px;
+      --font-head:      'Manrope', -apple-system, system-ui, sans-serif;
+      --font-body:      'Geist', -apple-system, system-ui, sans-serif;
+      --font-mono:      'Geist Mono', ui-monospace, monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    html, body {
+      background: var(--canvas);
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Subtle purple-tinted canvas + noise */
+    body {
+      min-height: 100vh;
+      position: relative;
+      background:
+        radial-gradient(1200px 900px at 0% -5%, rgba(86, 60, 140, 0.08), transparent 55%),
+        radial-gradient(900px 700px at 110% 10%, rgba(255, 187, 83, 0.025), transparent 55%),
+        var(--canvas);
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.035;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      background-size: 220px 220px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Page header ── */
+    .page-header {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 96px 48px 48px;
+    }
+    .page-header .label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold-high);
+      margin-bottom: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .page-header .label::before {
+      content: "";
+      width: 14px;
+      height: 1px;
+      background: var(--gold-high);
+    }
+    .page-header h1 {
+      font-family: var(--font-head);
+      font-size: clamp(42px, 5.2vw, 68px);
+      font-weight: 400;
+      letter-spacing: -0.028em;
+      line-height: 1.05;
+      color: var(--text-primary);
+      max-width: 820px;
+    }
+
+    /* ── Main editorial layout ── */
+    .editorial {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 48px 160px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 96px;
+      align-items: start;
+    }
+
+    /* ── Left index nav ── */
+    .index {
+      position: sticky;
+      top: 48px;
+      padding-top: 8px;
+    }
+    .index-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .index-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .index-item {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      padding: 10px 0;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 400;
+      letter-spacing: -0.006em;
+      cursor: pointer;
+      transition: color var(--t-base) var(--ease);
+      position: relative;
+    }
+    .index-item .num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: var(--text-label);
+      width: 24px;
+      flex-shrink: 0;
+      transition: color var(--t-base) var(--ease);
+    }
+    .index-item:hover { color: var(--text-secondary); }
+    .index-item:hover .num { color: var(--text-muted); }
+    .index-item.active {
+      color: var(--gold-high);
+      text-shadow: 0 0 18px rgba(255, 198, 110, 0.22);
+    }
+    .index-item.active .num { color: var(--gold-high); }
+    .index-item.active::before {
+      content: "";
+      position: absolute;
+      left: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold-high);
+      box-shadow: 0 0 14px rgba(255, 198, 110, 0.55);
+    }
+
+    /* ── Right content chapters ── */
+    .chapters {
+      display: flex;
+      flex-direction: column;
+    }
+    .chapter {
+      padding: 64px 0 120px;
+      border-bottom: 1px solid var(--border-soft);
+      scroll-margin-top: 32px;
+    }
+    .chapter:first-child { padding-top: 8px; }
+    .chapter:last-child { border-bottom: none; padding-bottom: 40px; }
+
+    .chapter-num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .chapter-num::after {
+      content: "";
+      display: inline-block;
+      width: 28px;
+      height: 1px;
+      background: var(--border-soft);
+    }
+
+    .chapter h2 {
+      font-family: var(--font-head);
+      font-size: clamp(32px, 3.8vw, 48px);
+      font-weight: 400;
+      letter-spacing: -0.024em;
+      line-height: 1.08;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+      max-width: 640px;
+    }
+
+    .chapter .intro {
+      font-size: 18px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      max-width: 620px;
+      margin-bottom: 40px;
+    }
+
+    .chapter ul {
+      list-style: none;
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+    .chapter ul li {
+      padding: 12px 0;
+      color: var(--text-secondary);
+      font-size: 15.5px;
+      line-height: 1.45;
+      border-top: 1px solid var(--border-soft);
+    }
+    .chapter ul li:last-child { border-bottom: 1px solid var(--border-soft); }
+
+    .chapter-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gold-high);
+      letter-spacing: -0.004em;
+      transition: color var(--t-fast) var(--ease), text-shadow var(--t-fast) var(--ease);
+    }
+    .chapter-cta:hover {
+      color: var(--gold);
+      text-shadow: 0 0 16px rgba(255, 198, 110, 0.4);
+    }
+    .chapter-cta::after {
+      content: "→";
+      transition: transform var(--t-fast) var(--ease);
+    }
+    .chapter-cta:hover::after { transform: translateX(4px); }
+
+    /* ── Responsive ── */
+    @media (max-width: 960px) {
+      .page-header { padding: 72px 24px 32px; }
+      .editorial {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        padding: 0 24px 96px;
+      }
+      .index {
+        position: static;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+      .index-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+      }
+      .index-item { padding: 6px 0; font-size: 14px; }
+      .index-item.active::before { display: none; }
+      .chapter { padding: 40px 0 72px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <span class="label">Core systems</span>
+    <h1>Eight systems. One product. Every piece connected.</h1>
+  </header>
+
+  <main class="editorial">
+
+    <!-- ── Left sticky index ── -->
+    <aside class="index" aria-label="Core systems index">
+      <div class="index-label">Core systems</div>
+      <ul class="index-list" id="index-list">
+        <li><a href="#customers"    class="index-item active" data-target="customers"><span class="num">01</span>Customers</a></li>
+        <li><a href="#billing"      class="index-item" data-target="billing"><span class="num">02</span>Billing</a></li>
+        <li><a href="#messaging"    class="index-item" data-target="messaging"><span class="num">03</span>Messaging</a></li>
+        <li><a href="#analytics"    class="index-item" data-target="analytics"><span class="num">04</span>Analytics</a></li>
+        <li><a href="#automations"  class="index-item" data-target="automations"><span class="num">05</span>Automations</a></li>
+        <li><a href="#sales"        class="index-item" data-target="sales"><span class="num">06</span>Sales</a></li>
+        <li><a href="#partnerships" class="index-item" data-target="partnerships"><span class="num">07</span>Partnerships</a></li>
+        <li><a href="#support"      class="index-item" data-target="support"><span class="num">08</span>Support</a></li>
+      </ul>
+    </aside>
+
+    <!-- ── Right chapters ── -->
+    <div class="chapters">
+
+      <article class="chapter" id="customers">
+        <span class="chapter-num">01 &nbsp;Customers</span>
+        <h2>The source of truth for every user</h2>
+        <p class="intro">Profiles, lifecycle, and segmentation in one place. Every system reads and writes to the same customer record.</p>
+        <ul>
+          <li>Unified profiles</li>
+          <li>Real-time lifecycle state</li>
+          <li>Flexible segmentation</li>
+          <li>Shared across every system</li>
+        </ul>
+        <a class="chapter-cta" href="#">Explore customers</a>
+      </article>
+
+      <article class="chapter" id="billing">
+        <span class="chapter-num">02 &nbsp;Billing</span>
+        <h2>Turn usage into revenue</h2>
+        <p class="intro">Define pricing once. Subscriptions, invoices, and revenue all flow through the same system.</p>
+        <ul>
+          <li>Plans and pricing</li>
+          <li>Subscriptions and billing</li>
+          <li>Invoices and payments</li>
+          <li>Revenue tracking</li>
+        </ul>
+        <a class="chapter-cta" href="#">Explore billing</a>
+      </article>
+
+      <article class="chapter" id="messaging">
+        <span class="chapter-num">03 &nbsp;Messaging</span>
+        <h2>Reach users across every surface</h2>
+        <p class="intro">Email, in-app, and lifecycle messaging. Triggered by real product events.</p>
+        <ul>
+          <li>Lifecycle campaigns</li>
+          <li>In-app messaging</li>
+          <li>Event-based triggers</li>
+          <li>Unified user context</li>
+        </ul>
+        <a class="chapter-cta" href="#">Explore messaging</a>
+      </article>
+
+      <article class="chapter" id="analytics">
+        <span class="chapter-num">04 &nbsp;Analytics</span>
+        <h2>See how everything connects</h2>
+        <p class="intro">Track acquisition, retention, and revenue. No stitching tools together.</p>
+        <ul>
+          <li>Product and revenue metrics</li>
+          <li>Funnel and retention analysis</li>
+          <li>Real-time events</li>
+          <li>Shared data model</li>
+        </ul>
+        <a class="chapter-cta" href="#">Explore analytics</a>
+      </article>
+
+      <article class="chapter" id="automations">
+        <span class="chapter-num">05 &nbsp;Automations</span>
+        <h2>Run your product on autopilot</h2>
+        <p class="intro">Define workflows once. Trigger actions across every system.</p>
+        <ul>
+          <li>Event-based workflows</li>
+          <li>Cross-system triggers</li>
+          <li>Background jobs</li>
+          <li>Routing and logic</li>
+        </ul>
+        <a class="chapter-cta" href="#">Explore automations</a>
+      </article>
+
+      <article class="chapter" id="sales">
+        <span class="chapter-num">06 &nbsp;Sales</span>
+        <h2>Manage pipeline and conversion</h2>
+        <p class="intro">Track leads, deals, and outcomes. Connected directly to your product data.</p>
+        <ul>
+          <li>Lead tracking</li>
+          <li>Pipeline management</li>
+          <li>Conversion tracking</li>
+          <li>Revenue attribution</li>
+        </ul>
+        <a class="chapter-cta" href="#">Explore sales</a>
+      </article>
+
+      <article class="chapter" id="partnerships">
+        <span class="chapter-num">07 &nbsp;Partnerships</span>
+        <h2>Grow through distribution</h2>
+        <p class="intro">Manage referrals, affiliates, and partnerships built into your product.</p>
+        <ul>
+          <li>Referral programs</li>
+          <li>Affiliate tracking</li>
+          <li>Partner attribution</li>
+          <li>Revenue sharing</li>
+        </ul>
+        <a class="chapter-cta" href="#">Explore partnerships</a>
+      </article>
+
+      <article class="chapter" id="support">
+        <span class="chapter-num">08 &nbsp;Support</span>
+        <h2>Support, built into your product</h2>
+        <p class="intro">Handle tickets and user requests with full context.</p>
+        <ul>
+          <li>Ticketing</li>
+          <li>Help workflows</li>
+          <li>User context</li>
+          <li>Response tracking</li>
+        </ul>
+        <a class="chapter-cta" href="#">Explore support</a>
+      </article>
+
+    </div>
+
+  </main>
+
+  <script>
+    // Scrollspy: update active index item based on current section
+    (function() {
+      const chapters = Array.from(document.querySelectorAll('.chapter'));
+      const links = Array.from(document.querySelectorAll('.index-item'));
+      const byId = Object.fromEntries(links.map(l => [l.dataset.target, l]));
+
+      const io = new IntersectionObserver((entries) => {
+        // Prefer the topmost entry that is intersecting in the top 40% of viewport
+        const inView = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => a.target.getBoundingClientRect().top - b.target.getBoundingClientRect().top);
+        if (inView.length) {
+          const id = inView[0].target.id;
+          links.forEach(l => l.classList.remove('active'));
+          if (byId[id]) byId[id].classList.add('active');
+        }
+      }, {
+        rootMargin: '-20% 0px -55% 0px',
+        threshold: 0
+      });
+
+      chapters.forEach(c => io.observe(c));
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mantle — Run your product on one platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --canvas:         #0c0a0e;
+      --surface:        #110f14;
+      --surface-raised: #16141a;
+      --surface-elev:   #1e1c23;
+      --border:         #ffffff1c;
+      --border-soft:    #ffffff12;
+      --hairline:       #ffffff08;
+      --text-primary:   #ffffff;
+      --text-secondary: #e2e1eb;
+      --text-muted:     #a2a0b1;
+      --text-label:     #5f5d72;
+      --gold:           #ffbb53;
+      --gold-dim:       #f5ac3d;
+      --gold-high:      #ffc66e;
+      --gold-soft:      rgba(255, 187, 83, 0.10);
+      --ease:           cubic-bezier(0.2, 0, 0, 1);
+      --t-fast:         150ms;
+      --t-base:         220ms;
+      --header-h:       64px;
+      --font-head:      'Manrope', -apple-system, system-ui, sans-serif;
+      --font-body:      'Geist', -apple-system, system-ui, sans-serif;
+      --font-mono:      'Geist Mono', ui-monospace, monospace;
+    }
+
+    html, body {
+      background: var(--canvas);
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body { min-height: 100vh; }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+    .container-wide {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    section { padding: 120px 0; border-bottom: 1px solid var(--border-soft); }
+    section:last-of-type { border-bottom: none; }
+
+    /* ── Typography ── */
+    h1, h2, h3, h4 {
+      font-family: var(--font-head);
+      color: var(--text-primary);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+    h1 { font-size: 64px; line-height: 1.05; font-weight: 400; letter-spacing: -0.028em; }
+    h2 { font-size: 44px; line-height: 1.1; font-weight: 400; letter-spacing: -0.024em; }
+    h3 { font-size: 22px; line-height: 1.3; }
+    h4 { font-size: 16px; line-height: 1.4; }
+
+    p { color: var(--text-muted); }
+
+    /* ── Eyebrow (gold mono uppercase + chevron) ── */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      line-height: 1.8;
+      text-transform: uppercase;
+      color: var(--gold-high);
+    }
+    .eyebrow::before {
+      content: "";
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      background: currentColor;
+      -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m9 18 6-6-6-6'/></svg>") no-repeat center / contain;
+              mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m9 18 6-6-6-6'/></svg>") no-repeat center / contain;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      height: 42px;
+      padding: 0 18px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+    }
+    .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .btn-primary {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #000;
+    }
+    .btn-primary:hover { background: var(--gold-dim); border-color: var(--gold-dim); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+    .btn-ghost:hover {
+      background: var(--surface);
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+    .btn-sm { height: 32px; padding: 0 12px; border-radius: 8px; font-size: 12px; gap: 8px; }
+    .btn-sm svg { width: 14px; height: 14px; }
+
+    /* ── Header (ported from directory) ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      border-bottom: 1px solid var(--border-soft);
+      background: linear-gradient(180deg, rgba(12, 10, 14, 0.92), rgba(12, 10, 14, 0.72));
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
+    }
+    .site-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-head);
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .site-brand .site-logo { display: block; height: 28px; width: auto; }
+
+    .site-nav { display: flex; align-items: center; gap: 32px; }
+    .site-nav > a,
+    .nav-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: #fff;
+      font-weight: 400;
+      cursor: pointer;
+      padding: 4px 0;
+      text-decoration: none;
+    }
+    .site-nav > a:hover,
+    .nav-trigger:hover { color: var(--gold); }
+    .site-nav .chev {
+      width: 10px; height: 10px;
+      stroke: currentColor;
+      opacity: 0.65;
+      transition: transform var(--t-fast) var(--ease);
+    }
+    .nav-group:hover .chev { transform: rotate(180deg); }
+
+    /* Mega menu */
+    .nav-group { position: relative; }
+    .mega-menu {
+      position: fixed;
+      left: 50%;
+      top: var(--header-h);
+      transform: translate(-50%, -6px);
+      width: min(1200px, calc(100vw - 48px));
+      background: #15131c;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 12px;
+      box-shadow:
+        0 1px 0 rgba(255,255,255,0.04) inset,
+        0 30px 60px -20px rgba(0,0,0,0.6),
+        0 0 0 1px rgba(255,255,255,0.02);
+      padding: 18px 22px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity var(--t-base) var(--ease) 180ms,
+        transform var(--t-base) var(--ease) 180ms,
+        visibility 0s linear calc(var(--t-base) + 180ms);
+      z-index: 60;
+    }
+    .nav-group:hover .mega-menu,
+    .mega-menu:hover {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+      transition:
+        opacity var(--t-base) var(--ease),
+        transform var(--t-base) var(--ease),
+        visibility 0s linear 0s;
+    }
+    .mega-menu::before {
+      content: "";
+      position: absolute;
+      top: -24px;
+      left: -12px;
+      right: -12px;
+      height: 24px;
+    }
+    .nav-group::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: -20px;
+      right: -20px;
+      height: 24px;
+      pointer-events: none;
+    }
+    .nav-group:hover::after { pointer-events: auto; }
+
+    .mm-grid { display: grid; gap: 48px; }
+    .mm-grid.cols-3-card { grid-template-columns: 1fr 1fr 340px; }
+    .mm-grid.cols-2-plat { grid-template-columns: 320px 1fr; gap: 96px; }
+    .mm-grid.cols-4-sol  { grid-template-columns: 1fr 1fr 1fr 340px; gap: 40px; }
+    .mega-menu.mega-menu-platform { width: min(1060px, calc(100vw - 48px)); }
+    .mega-menu.mega-menu-wide { width: 960px; }
+
+    .mm-stack { display: flex; flex-direction: column; gap: 6px; }
+    .mm-stack .mm-section-label { margin-bottom: 8px; }
+
+    .mm-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .mm-section-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .mm-list { display: flex; flex-direction: column; gap: 14px; }
+    .mm-list.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; }
+    .mm-item {
+      display: block;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform var(--t-fast) var(--ease);
+    }
+    .mm-item:hover { transform: translateX(2px); }
+    .mm-item-title {
+      font-family: var(--font-head);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      transition: color var(--t-fast) var(--ease);
+    }
+    .mm-item:hover .mm-item-title { color: var(--gold); }
+    .mm-item-sub {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.25;
+      margin-top: 3px;
+    }
+    .mm-badge {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 6px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.05em;
+      color: var(--gold);
+      background: var(--gold-soft);
+      border: 1px solid rgba(255,187,83,0.25);
+      border-radius: 999px;
+      vertical-align: middle;
+      text-transform: uppercase;
+    }
+    .mm-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--gold);
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform var(--t-fast) var(--ease);
+    }
+    .mm-link:hover { transform: translateX(2px); }
+
+    .mm-card {
+      background: linear-gradient(180deg, #121017 0%, #0a080d 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color var(--t-fast) var(--ease);
+    }
+    .mm-card:hover { border-color: rgba(255,187,83,0.3); }
+    .mm-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(300px 160px at 100% 0%, rgba(255,187,83,0.08), transparent 60%),
+        radial-gradient(260px 160px at 0% 100%, rgba(90,55,145,0.2), transparent 55%);
+      pointer-events: none;
+    }
+    .mm-card > * { position: relative; }
+    .mm-card-arrow {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: color var(--t-fast) var(--ease);
+    }
+    .mm-card-arrow .icon-hover { display: none; }
+    .mm-card:hover .mm-card-arrow { color: var(--gold); }
+    .mm-card:hover .mm-card-arrow .icon-default { display: none; }
+    .mm-card:hover .mm-card-arrow .icon-hover { display: inline-flex; }
+    .mm-card-media {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(255,187,83,0.14), transparent 55%),
+        radial-gradient(circle at 80% 70%, rgba(140,95,210,0.28), transparent 55%),
+        linear-gradient(135deg, #1d1628 0%, #120d1c 100%);
+      margin: -16px -16px 8px;
+      border-radius: 11px 11px 0 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .mm-card-media::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(-45deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.7;
+    }
+    .mm-card-media-label {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      white-space: nowrap;
+    }
+    .mm-card-kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .mm-card-title {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+    }
+    .mm-card-body {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .site-actions { display: flex; align-items: center; gap: 16px; }
+    .sign-in-link {
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--text-primary);
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color var(--t-fast) var(--ease);
+    }
+    .sign-in-link:hover { color: var(--gold); }
+    .site-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 8px;
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: #000;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+    }
+    .site-cta:hover {
+      background: var(--gold-dim);
+      border-color: var(--gold-dim);
+    }
+
+    /* ── 1. Hero ── */
+    .hero { padding: 140px 0 120px; text-align: center; }
+    .hero h1 { max-width: 900px; margin: 0 auto 28px; }
+    .hero p.lead {
+      font-size: 20px;
+      color: var(--text-muted);
+      max-width: 620px;
+      margin: 0 auto 40px;
+      line-height: 1.5;
+    }
+    .hero-ctas { display: inline-flex; gap: 12px; }
+    .hero-visual {
+      max-width: 1040px;
+      margin: 80px auto 0;
+      aspect-ratio: 16 / 9;
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 35% 35%, rgba(255,187,83,0.08), transparent 50%),
+        radial-gradient(circle at 75% 60%, rgba(118, 232, 255, 0.04), transparent 50%),
+        linear-gradient(0deg, transparent 49%, rgba(255,255,255,0.035) 50%, transparent 51%),
+        linear-gradient(90deg, transparent 49%, rgba(255,255,255,0.035) 50%, transparent 51%),
+        var(--surface);
+      background-size: auto, auto, 48px 48px, 48px 48px, auto;
+    }
+
+    /* ── Integrations strip (overlaps hero-visual bottom) ── */
+    .integrations-inner {
+      position: relative;
+      z-index: 3;
+      max-width: 1040px;
+      margin: -72px auto 0;
+      padding: 28px 48px;
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      background:
+        radial-gradient(900px 200px at 50% 0%, rgba(140, 95, 210, 0.08), transparent 60%),
+        var(--surface-raised);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .integrations-label {
+      text-align: center;
+      font-size: 15px;
+      color: var(--text-muted);
+      margin: 0 0 32px;
+    }
+    .integrations-logos {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .integrations-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      opacity: 0.9;
+      transition: opacity var(--t-fast) var(--ease);
+    }
+    .integrations-logo:hover { opacity: 1; }
+    .integrations-logo svg {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      color: currentColor;
+    }
+
+    /* ── 2. Proof ── */
+    .proof { padding: 80px 0; }
+    .proof-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .proof-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .proof-logos {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .proof-logo {
+      height: 28px;
+      flex: 1;
+      min-width: 120px;
+      max-width: 160px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+      opacity: 0.6;
+    }
+    .proof-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 28px 0;
+    }
+    .proof-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 0 32px;
+      border-left: 1px solid var(--border-soft);
+    }
+    .proof-stat:first-child {
+      border-left: none;
+      padding-left: 0;
+    }
+    .proof-stat .big {
+      font-family: var(--font-head);
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .proof-stat .sub { font-size: 13px; color: var(--text-muted); }
+
+    /* ── Generic section header ── */
+    .section-head { max-width: 720px; margin-bottom: 64px; }
+    .section-head .eyebrow { margin-bottom: 20px; }
+    .section-head h2 { margin-bottom: 16px; }
+    .section-head p { font-size: 17px; line-height: 1.5; }
+
+    /* ── 3. What Mantle is ── */
+    .what-statement {
+      max-width: 1080px;
+      padding: 40px 0;
+    }
+    .what-statement h2 {
+      font-size: clamp(32px, 3.6vw, 52px);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      font-weight: 400;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .what-statement h2 span { display: block; }
+    .what-statement h2 span + span { margin-top: 0.6em; }
+    .what-statement h2 .muted {
+      color: var(--text-muted);
+    }
+
+    /* ── 4. Use cases ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 32px;
+      background: var(--canvas);
+      transition: background var(--t-fast) var(--ease);
+    }
+    .card:hover { background: var(--surface); }
+    .card h3 { font-size: 20px; font-weight: 500; margin-bottom: 0; }
+    .card p { font-size: 14px; line-height: 1.5; }
+
+    /* Use-case pinned horizontal scroll */
+    #use-cases { padding: 120px 0 0; }
+    .cases-footer {
+      margin-top: 56px;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: center;
+    }
+    .cases-pin {
+      position: relative;
+      /* Height set by JS to accommodate horizontal scroll distance */
+    }
+    .cases-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 56px;
+      overflow: hidden;
+    }
+    .cases-sticky .section-head {
+      max-width: 720px;
+      padding: 0 48px;
+      margin-bottom: 0;
+    }
+    .cases-track {
+      display: flex;
+      gap: 24px;
+      padding-left: 48px;
+      padding-right: calc(50vw - 160px);
+      width: max-content;
+      will-change: transform;
+    }
+    .case {
+      flex: 0 0 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .case-visual {
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .case-visual::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 35%, rgba(255, 187, 83, 0.09), transparent 55%),
+        radial-gradient(circle at 75% 70%, rgba(140, 95, 210, 0.18), transparent 55%),
+        linear-gradient(135deg, #1a1520 0%, #110e15 100%);
+      opacity: 0;
+      transition: opacity 450ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .case-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      background-size: 240px 240px;
+      mix-blend-mode: overlay;
+      opacity: 0;
+      transition: opacity 450ms cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .case:hover .case-visual {
+      border-color: transparent;
+    }
+    .case:hover .case-visual::after { opacity: 1; }
+    .case:hover .case-visual::before { opacity: 0.18; }
+    .case-body { padding: 0 4px; display: flex; flex-direction: column; gap: 8px; }
+    .case h3 {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+    .case p {
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .case-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: color var(--t-fast) var(--ease);
+    }
+    .case-more::after {
+      content: "→";
+      font-size: 14px;
+      transition: transform var(--t-fast) var(--ease);
+    }
+    .case:hover .case-more { color: var(--gold); }
+    .case:hover .case-more::after { transform: translateX(3px); }
+    @media (prefers-reduced-motion: reduce) {
+      .cases-pin { height: auto !important; }
+      .cases-sticky { position: static; height: auto; }
+      .cases-track {
+        overflow-x: auto;
+        transform: none !important;
+      }
+      .case { transition: none; }
+    }
+    .cards-footer {
+      margin-top: 32px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .link-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: color var(--t-fast) var(--ease);
+    }
+    .link-arrow:hover { color: var(--gold); }
+    .link-arrow::after {
+      content: "→";
+      font-size: 14px;
+      transition: transform var(--t-fast) var(--ease);
+    }
+    .link-arrow:hover::after { transform: translateX(4px); }
+
+    /* ── 5. Systems (editorial, Sanity-style) ── */
+    .sys-section {
+      padding: 140px 0 160px;
+      position: relative;
+      background:
+        radial-gradient(1200px 800px at 0% 10%, rgba(86, 60, 140, 0.06), transparent 55%),
+        transparent;
+    }
+    .sys-section::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.03;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      background-size: 200px 200px;
+    }
+    .sys-head { max-width: 1200px; margin: 0 0 128px; }
+    .sys-head .eyebrow { margin-bottom: 24px; }
+    .sys-head h2 {
+      font-size: clamp(44px, 5.2vw, 68px);
+      font-weight: 400;
+      letter-spacing: -0.028em;
+      line-height: 1.05;
+      max-width: 900px;
+    }
+
+    .sys-layout {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* Sticky left index */
+    .sys-index {
+      position: sticky;
+      top: calc(var(--header-h) + 32px);
+      padding-top: 4px;
+    }
+    .sys-index-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .sys-index-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .sys-index-item {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      padding: 10px 0;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color var(--t-base) var(--ease);
+      position: relative;
+    }
+    .sys-index-item .sys-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: var(--text-label);
+      width: 24px;
+      flex-shrink: 0;
+      transition: color var(--t-base) var(--ease);
+    }
+    .sys-index-item:hover { color: var(--text-secondary); }
+    .sys-index-item:hover .sys-num { color: var(--text-muted); }
+    .sys-index-item.active {
+      color: var(--gold-high);
+      text-shadow: 0 0 18px rgba(255, 198, 110, 0.22);
+    }
+    .sys-index-item.active .sys-num { color: var(--gold-high); }
+    .sys-index-item.active::before {
+      content: "";
+      position: absolute;
+      left: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold-high);
+      box-shadow: 0 0 14px rgba(255, 198, 110, 0.5);
+    }
+
+    /* Right chapters */
+    .sys-chapters { display: flex; flex-direction: column; }
+    .sys-chapter {
+      padding: 40px 0 104px;
+      border-bottom: 1px solid var(--border-soft);
+      scroll-margin-top: calc(var(--header-h) + 16px);
+      display: grid;
+      grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+      column-gap: 56px;
+      align-items: start;
+    }
+    .sys-chapter > *:not(.sys-chapter-media) { grid-column: 1; }
+    .sys-chapter:first-child { padding-top: 0; }
+    .sys-chapter:last-child { border-bottom: none; padding-bottom: 16px; }
+
+    .sys-chapter-media {
+      position: relative;
+      grid-column: 2;
+      grid-row: 1 / 6;
+      align-self: stretch;
+      min-height: 600px;
+      aspect-ratio: 5 / 4;
+      width: 100%;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 30% 35%, rgba(255,187,83,0.09), transparent 55%),
+        radial-gradient(circle at 75% 70%, rgba(140,95,210,0.18), transparent 55%),
+        linear-gradient(135deg, #1a1520 0%, #110e15 100%);
+    }
+    .sys-chapter-media::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(-45deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.7;
+    }
+    .sys-chapter-media-label {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-label);
+      white-space: nowrap;
+    }
+
+    .sys-chapter-num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sys-chapter-num::after {
+      content: "";
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--border-soft);
+    }
+
+    .sys-chapter h3 {
+      font-family: var(--font-head);
+      font-size: 38px;
+      font-weight: 500;
+      letter-spacing: -0.024em;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      max-width: 640px;
+    }
+
+    .sys-chapter .sys-intro {
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin-bottom: 36px;
+    }
+
+    .sys-chapter ul {
+      list-style: none;
+      max-width: 520px;
+      margin-bottom: 36px;
+    }
+    .sys-chapter ul li {
+      padding: 12px 0;
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.5;
+      border-top: 1px solid var(--border-soft);
+    }
+    .sys-chapter ul li:last-child { border-bottom: 1px solid var(--border-soft); }
+
+    .sys-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gold-high);
+      transition: color var(--t-fast) var(--ease), text-shadow var(--t-fast) var(--ease);
+    }
+    .sys-cta:hover {
+      color: var(--gold);
+      text-shadow: 0 0 14px rgba(255, 198, 110, 0.4);
+    }
+    .sys-cta::after {
+      content: "→";
+      transition: transform var(--t-fast) var(--ease);
+    }
+    .sys-cta:hover::after { transform: translateX(4px); }
+
+    /* ── 6. How it works ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .step { display: flex; flex-direction: column; gap: 12px; }
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--gold-high);
+      letter-spacing: 0.05em;
+    }
+    .step h3 { font-size: 22px; margin-bottom: 4px; }
+    .step p { font-size: 15px; }
+
+    /* ── 7. Built for ── */
+    .built-for-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .built-for-grid .card { padding: 28px; gap: 8px; }
+    .built-for-grid .card h3 { font-size: 17px; }
+    .built-for-grid .card p { font-size: 13px; }
+
+    /* ── 8. Platforms ── */
+    .platforms-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .platforms-grid .card { padding: 32px; gap: 10px; }
+
+    /* ── 9. Customer story ── */
+    .story {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .story-media {
+      aspect-ratio: 4 / 3;
+      background:
+        radial-gradient(circle at 40% 40%, rgba(118, 232, 255, 0.08), transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(255,187,83,0.08), transparent 60%),
+        var(--surface-raised);
+    }
+    .story-copy { padding: 48px 64px 48px 0; }
+    .story-copy .eyebrow { margin-bottom: 20px; }
+    .story-copy h2 { font-size: 36px; line-height: 1.15; margin-bottom: 24px; }
+
+    /* ── Developer experience ── */
+    .dev-section {
+      padding: 140px 0 160px;
+      text-align: center;
+    }
+    .dev-section h2 {
+      font-size: clamp(44px, 5.2vw, 68px);
+      font-weight: 400;
+      letter-spacing: -0.028em;
+      line-height: 1.05;
+      max-width: 920px;
+      margin: 0 auto 96px;
+    }
+    .dev-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 64px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .dev-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      text-align: center;
+    }
+    .dev-col h3 {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .dev-col p {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 320px;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .dev-visual {
+      margin-top: 20px;
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dev-code {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 20px;
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+    }
+    .dev-code-cmd { color: var(--gold-high); }
+    .dev-code-text { color: var(--text-secondary); }
+    .dev-code-copy {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color var(--t-fast) var(--ease);
+    }
+    .dev-code-copy:hover { color: var(--text-primary); }
+    .dev-code-copy svg { width: 14px; height: 14px; }
+    .dev-logos {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+    .dev-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── 10. Closing ── */
+    .closing { text-align: center; padding: 140px 0 160px; }
+    .closing .eyebrow { margin-bottom: 20px; }
+    .closing h2 { font-size: 56px; margin: 0 auto 20px; max-width: 820px; }
+    .closing p.lead {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 40px;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      padding: 56px 0 40px;
+      border-top: 1px solid var(--border-soft);
+    }
+    .site-footer .inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 960px) {
+      h1 { font-size: 44px; }
+      h2 { font-size: 32px; }
+      .hero { padding: 80px 0 64px; }
+      section { padding: 72px 0; }
+      .container { padding: 0 24px; }
+      .what-grid,
+      .story { grid-template-columns: 1fr; gap: 32px; }
+      .story-copy { padding: 32px; }
+      .cards-grid,
+      .built-for-grid,
+      .platforms-grid,
+      .steps,
+      .proof-stats { grid-template-columns: 1fr 1fr; }
+      .dev-section { padding: 80px 0; }
+      .dev-section h2 { margin-bottom: 56px; }
+      .dev-grid { grid-template-columns: 1fr; gap: 56px; }
+      .site-nav { display: none; }
+      .sys-section { padding: 80px 0; }
+      .sys-head { margin-bottom: 40px; }
+      .sys-layout { grid-template-columns: 1fr; gap: 40px; }
+      .sys-index {
+        position: static;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-soft);
+      }
+      .sys-index-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px 20px;
+      }
+      .sys-index-item { padding: 6px 0; }
+      .sys-index-item.active::before { display: none; }
+      .sys-chapter {
+        padding: 32px 0 56px;
+        grid-template-columns: 1fr;
+        row-gap: 32px;
+      }
+      .sys-chapter > *:not(.sys-chapter-media) { grid-column: 1; }
+      .sys-chapter-media {
+        grid-column: 1;
+        grid-row: auto;
+        position: static;
+        aspect-ratio: 16 / 10;
+      }
+    }
+    @media (max-width: 560px) {
+      .cards-grid,
+      .built-for-grid,
+      .platforms-grid,
+      .steps { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Site header (shared with directory) ═══ -->
+  <header class="site-header">
+    <a class="site-brand" href="mantle-homepage.html" aria-label="Mantle Compass">
+      <svg class="site-logo" xmlns="http://www.w3.org/2000/svg" width="160" height="30" fill="none" viewBox="0 0 192 36" aria-hidden="true"><path fill="#ffbb53" d="M0 8a8 8 0 0 1 8-8h20a8 8 0 0 1 8 8v20a8 8 0 0 1-8 8H8a8 8 0 0 1-8-8z"/><path fill="#000" d="M8 9v18l4.826-.99v-9.42l4.17 9.12h2.979l4.14-9.12v9.42L29 27V9h-6.166l-4.379 8.46L14.106 9z"/><path fill="#fff" d="M105.031 25.3q-1.61 0-2.83-.7a5 5 0 0 1-1.89-1.97q-.67-1.27-.67-2.94 0-1.77.66-3.07.67-1.3 1.86-2.01t2.77-.71q1.65 0 2.81.77 1.16.76 1.73 2.17.58 1.41.46 3.35h-2.09v-.76q-.02-1.88-.72-2.78-.69-.9-2.11-.9-1.57 0-2.36.99t-.79 2.86q0 1.78.79 2.76.79.97 2.28.97.98 0 1.69-.44.72-.45 1.12-1.28l2.05.65q-.63 1.45-1.91 2.25-1.28.79-2.85.79m-3.85-5.11v-1.63h7.71v1.63zM95.548 25V10.3h2.09V25zm-2.077 0a9 9 0 0 1-2 .17q-.98-.03-1.75-.38t-1.16-1.1q-.35-.67-.38-1.36-.02-.7-.02-1.58V11.2h2.1v9.45q0 .65.01 1.13.021.48.21.81.36.62 1.14.71.79.08 1.85-.07zm-7.38-9.12V14.2h7.38v1.68zM82.967 25v-5.31q0-.63-.11-1.29-.1-.67-.4-1.24a2.35 2.35 0 0 0-.83-.92q-.53-.35-1.39-.35-.56 0-1.06.19-.5.18-.88.59-.37.41-.59 1.08-.21.67-.21 1.63l-1.3-.49q0-1.47.55-2.59a4.13 4.13 0 0 1 1.58-1.76q1.029-.63 2.49-.63 1.12 0 1.88.36t1.23.95q.48.58.73 1.27t.34 1.35.09 1.16v6zm-7.59 0V14.2h1.87v3.12h.25V25zm-7.927.3q-1.2 0-2.01-.44-.81-.45-1.23-1.18a3.3 3.3 0 0 1-.41-1.62q0-.82.29-1.44t.86-1.05q.57-.44 1.4-.71.72-.21 1.63-.37a55 55 0 0 1 1.91-.3q1.01-.14 2-.28l-.76.42q.02-1.27-.54-1.88-.55-.62-1.9-.62-.85 0-1.56.4-.71.39-.99 1.3l-1.95-.6q.4-1.39 1.52-2.21 1.13-.82 3-.82 1.45 0 2.52.5 1.08.49 1.58 1.56.26.53.32 1.12t.06 1.27V25h-1.85v-2.47l.36.32q-.67 1.24-1.71 1.85-1.03.6-2.54.6m.37-1.71q.89 0 1.53-.31a3 3 0 0 0 1.03-.81q.39-.49.51-1.02.17-.48.19-1.08.03-.6.03-.96l.68.25-1.8.27q-.81.12-1.47.24-.65.11-1.16.27-.43.15-.77.36-.33.21-.53.51-.19.3-.19.73 0 .42.21.78.21.35.64.56t1.1.21M46.598 10.455h2.663l4.631 11.306h.17l4.631-11.306h2.663V25.25H59.27V14.474h-.136l-4.29 10.776h-1.732l-4.29-10.783h-.135V25.25h-2.088z"/></svg>
+    </a>
+
+    <nav class="site-nav">
+      <!-- Platform -->
+      <div class="nav-group">
+        <a class="nav-trigger">Platform
+          <svg class="chev" viewBox="0 0 12 12" fill="none"><path d="M3 4.5 L6 7.5 L9 4.5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <div class="mega-menu mega-menu-platform">
+          <div class="mm-grid cols-2-plat">
+            <div>
+              <div class="mm-stack">
+                <a class="mm-card" href="#">
+                  <div class="mm-card-head">
+                    <div class="mm-card-kicker">Mantle Ops</div>
+                    <span class="mm-card-arrow" aria-hidden="true">
+                      <svg class="icon-default" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 L11 5"/><path d="M6 5h5v5"/></svg><svg class="icon-hover" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="M9 4l4 4-4 4"/></svg>
+                    </span>
+                  </div>
+                  <div class="mm-card-title">The business layer for your app</div>
+                  <div class="mm-card-body">Run your entire product on one platform, fully connected.</div>
+                </a>
+                <a class="mm-card" href="#">
+                  <div class="mm-card-head">
+                    <div class="mm-card-kicker">Mantle AI <span class="mm-badge">New</span></div>
+                    <span class="mm-card-arrow" aria-hidden="true">
+                      <svg class="icon-default" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 L11 5"/><path d="M6 5h5v5"/></svg><svg class="icon-hover" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="M9 4l4 4-4 4"/></svg>
+                    </span>
+                  </div>
+                  <div class="mm-card-title">AI that connects everything</div>
+                  <div class="mm-card-body">Automates workflows and takes action across your systems.</div>
+                </a>
+              </div>
+            </div>
+            <div>
+              <div class="mm-section-label">Systems</div>
+              <div class="mm-list two-col">
+                <a class="mm-item" href="mantle-use-case-directory.html">
+                  <div class="mm-item-title">Customers</div>
+                  <div class="mm-item-sub">Profiles, lifecycle, segmentation</div>
+                </a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Billing</div><div class="mm-item-sub">Pricing, subscriptions, payments</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Email + messaging</div><div class="mm-item-sub">Lifecycle, campaigns, automation</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Analytics</div><div class="mm-item-sub">Acquisition, retention, revenue</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Automations</div><div class="mm-item-sub">Triggers, workflows, routing</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Sales</div><div class="mm-item-sub">Leads, pipeline, conversion</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Partnerships</div><div class="mm-item-sub">Affiliates, referrals, distribution</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Support</div><div class="mm-item-sub">Tickets, help docs, AI responses</div></a>
+              </div>
+              <div style="margin-top: 20px;">
+                <a class="mm-link" href="mantle-use-case-directory.html">View all systems →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Solutions -->
+      <div class="nav-group">
+        <a class="nav-trigger">Solutions
+          <svg class="chev" viewBox="0 0 12 12" fill="none"><path d="M3 4.5 L6 7.5 L9 4.5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <div class="mega-menu mega-menu-wide">
+          <div class="mm-grid cols-3-card">
+            <div>
+              <div class="mm-section-label">Use cases</div>
+              <div class="mm-list">
+                <a class="mm-item" href="#"><div class="mm-item-title">Launch your app</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Monetize your product</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Onboard and activate users</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Engage and retain users</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Understand your data</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Grow your app</div></a>
+              </div>
+              <div style="margin-top: 14px;">
+                <a class="mm-link" href="#">View all use cases →</a>
+              </div>
+            </div>
+            <div>
+              <div class="mm-section-label">Built for</div>
+              <div class="mm-list">
+                <a class="mm-item" href="#"><div class="mm-item-title">Shopify apps</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">AI-built apps</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Web apps</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Mobile apps</div></a>
+              </div>
+              <div style="margin-top: 14px;">
+                <a class="mm-link" href="#">See all integrations →</a>
+              </div>
+            </div>
+            <div>
+              <a class="mm-card" href="#">
+                <div class="mm-card-media" aria-hidden="true"><span class="mm-card-media-label">Customer logo</span></div>
+                <div class="mm-card-head">
+                  <div class="mm-card-kicker">Featured customer</div>
+                  <span class="mm-card-arrow" aria-hidden="true">
+                    <svg class="icon-default" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 L11 5"/><path d="M6 5h5v5"/></svg><svg class="icon-hover" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="M9 4l4 4-4 4"/></svg>
+                  </span>
+                </div>
+                <div class="mm-card-title">How TXTCart drove $131K in referral revenue using Mantle</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resources -->
+      <div class="nav-group">
+        <a class="nav-trigger">Resources
+          <svg class="chev" viewBox="0 0 12 12" fill="none"><path d="M3 4.5 L6 7.5 L9 4.5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <div class="mega-menu mega-menu-wide">
+          <div class="mm-grid cols-4-sol">
+            <div>
+              <div class="mm-section-label">Company</div>
+              <div class="mm-list">
+                <a class="mm-item" href="#"><div class="mm-item-title">Customers</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Blog</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Events</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">About</div></a>
+              </div>
+            </div>
+            <div>
+              <div class="mm-section-label">Learn</div>
+              <div class="mm-list">
+                <a class="mm-item" href="#"><div class="mm-item-title">Docs</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Compass</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Frameworks</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Join our Discord</div></a>
+              </div>
+            </div>
+            <div>
+              <div class="mm-section-label">Developers</div>
+              <div class="mm-list">
+                <a class="mm-item" href="#"><div class="mm-item-title">MCPs</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">API reference</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">SDKs</div></a>
+                <a class="mm-item" href="#"><div class="mm-item-title">Changelog</div></a>
+              </div>
+            </div>
+            <div>
+              <a class="mm-card" href="mantle-compass.html">
+                <div class="mm-card-media" aria-hidden="true"><span class="mm-card-media-label">Compass visual</span></div>
+                <div class="mm-card-head">
+                  <div class="mm-card-kicker">Mantle Compass</div>
+                  <span class="mm-card-arrow" aria-hidden="true">
+                    <svg class="icon-default" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 L11 5"/><path d="M6 5h5v5"/></svg><svg class="icon-hover" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/><path d="M9 4l4 4-4 4"/></svg>
+                  </span>
+                </div>
+                <div class="mm-card-title">The framework for building great apps</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="#">Docs</a>
+      <a href="#">Pricing</a>
+    </nav>
+
+    <div class="site-actions">
+      <a class="sign-in-link" href="#">Sign in</a>
+      <a class="site-cta" href="#">Start for free</a>
+    </div>
+  </header>
+
+  <!-- ═══ 1. Hero ═══ -->
+  <section class="hero">
+    <div class="container">
+      <h1>You built the app.<br>Mantle runs the business.</h1>
+      <p class="lead">Run your entire product on one platform. Customers, billing, messaging, and analytics — all connected by default.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#">
+          Get started for free
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#">
+          View docs
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+        </a>
+      </div>
+      <div class="hero-visual" aria-hidden="true"></div>
+      <div class="integrations-inner">
+        <p class="integrations-label">Mantle integrates seamlessly with your favorite app-building tools</p>
+        <div class="integrations-logos">
+          <a class="integrations-logo" href="#">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4h8v8H4zM12 12h8v8h-8z"/></svg>
+            Replit
+          </a>
+          <a class="integrations-logo" href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/></svg>
+            Base 44
+          </a>
+          <a class="integrations-logo" href="#">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7-5-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-7 11-7 11h-4z" opacity=".9"/></svg>
+            Lovable
+          </a>
+          <a class="integrations-logo" href="#">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="12" r="4"/></svg>
+            Rork
+          </a>
+          <a class="integrations-logo" href="#">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2v7M12 15v7M2 12h7M15 12h7M5 5l4.9 4.9M14.1 14.1 19 19M5 19l4.9-4.9M14.1 9.9 19 5"/></svg>
+            Claude
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 2. What Mantle is ═══ -->
+  <section id="platform">
+    <div class="container">
+      <div class="what-statement">
+        <h2>
+          <span>AI made building easy. Turning it into a real business is still hard. Most products are stitched together. Mantle isn't.</span>
+          <span class="muted">Customers, billing, messaging, and analytics — all connected from day one.</span>
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 3. Proof ═══ -->
+  <section class="proof">
+    <div class="container">
+      <div class="proof-inner">
+        <span class="proof-label">Customers powered by Mantle</span>
+        <div class="proof-logos" aria-hidden="true">
+          <div class="proof-logo"></div>
+          <div class="proof-logo"></div>
+          <div class="proof-logo"></div>
+          <div class="proof-logo"></div>
+          <div class="proof-logo"></div>
+        </div>
+        <div class="proof-stats">
+          <div class="proof-stat">
+            <span class="big">$131K</span>
+            <span class="sub">in referral revenue generated</span>
+          </div>
+          <div class="proof-stat">
+            <span class="big">32,045</span>
+            <span class="sub">lifecycle emails sent</span>
+          </div>
+          <div class="proof-stat">
+            <span class="big">45%</span>
+            <span class="sub">average revenue lift</span>
+          </div>
+          <div class="proof-stat">
+            <span class="big">2.4M</span>
+            <span class="sub">customers managed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 4. Use cases ═══ -->
+  <section id="use-cases">
+    <div class="cases-pin">
+      <div class="cases-sticky">
+        <div class="section-head">
+          <span class="eyebrow">Use cases</span>
+          <h2>Everything you need to turn your app into revenue</h2>
+        </div>
+        <div class="cases-track">
+        <a class="case" href="#">
+          <div class="case-visual" aria-hidden="true"></div>
+          <div class="case-body">
+            <h3>Launch your app</h3>
+            <p>Ship a production-ready product from day one.</p>
+            <span class="case-more">Learn more</span>
+          </div>
+        </a>
+        <a class="case" href="#">
+          <div class="case-visual" aria-hidden="true"></div>
+          <div class="case-body">
+            <h3>Monetize your product</h3>
+            <p>Turn usage into revenue with built-in pricing and billing.</p>
+            <span class="case-more">Learn more</span>
+          </div>
+        </a>
+        <a class="case" href="#">
+          <div class="case-visual" aria-hidden="true"></div>
+          <div class="case-body">
+            <h3>Onboard and activate users</h3>
+            <p>Guide users to their first value, faster.</p>
+            <span class="case-more">Learn more</span>
+          </div>
+        </a>
+        <a class="case" href="#">
+          <div class="case-visual" aria-hidden="true"></div>
+          <div class="case-body">
+            <h3>Engage and retain users</h3>
+            <p>Run lifecycle messaging across every surface.</p>
+            <span class="case-more">Learn more</span>
+          </div>
+        </a>
+        <a class="case" href="#">
+          <div class="case-visual" aria-hidden="true"></div>
+          <div class="case-body">
+            <h3>Understand your data</h3>
+            <p>See how everything connects, in real time.</p>
+            <span class="case-more">Learn more</span>
+          </div>
+        </a>
+        <a class="case" href="#">
+          <div class="case-visual" aria-hidden="true"></div>
+          <div class="case-body">
+            <h3>Grow your app</h3>
+            <p>Experiment, optimize, and scale with confidence.</p>
+            <span class="case-more">Learn more</span>
+          </div>
+        </a>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="cases-footer">
+        <a class="btn btn-ghost" href="#">View all use cases</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 5. Systems (editorial) ═══ -->
+  <section id="systems" class="sys-section">
+    <div class="container">
+      <div class="sys-head">
+        <h2>Eight systems. One platform. All connected by Mantle AI.</h2>
+      </div>
+
+      <div class="sys-layout">
+        <!-- Sticky left index -->
+        <aside class="sys-index" aria-label="Systems index">
+          <ul class="sys-index-list">
+            <li><a href="#sys-customers"    class="sys-index-item active" data-target="sys-customers">Customers</a></li>
+            <li><a href="#sys-billing"      class="sys-index-item" data-target="sys-billing">Billing</a></li>
+            <li><a href="#sys-messaging"    class="sys-index-item" data-target="sys-messaging">Email + messaging</a></li>
+            <li><a href="#sys-analytics"    class="sys-index-item" data-target="sys-analytics">Analytics</a></li>
+            <li><a href="#sys-automations"  class="sys-index-item" data-target="sys-automations">Automations</a></li>
+            <li><a href="#sys-sales"        class="sys-index-item" data-target="sys-sales">Sales</a></li>
+            <li><a href="#sys-partnerships" class="sys-index-item" data-target="sys-partnerships">Partnerships</a></li>
+            <li><a href="#sys-support"      class="sys-index-item" data-target="sys-support">Support</a></li>
+          </ul>
+        </aside>
+
+        <!-- Right chapters -->
+        <div class="sys-chapters">
+
+          <article class="sys-chapter" id="sys-customers">
+            <h3>The source of truth for every user</h3>
+            <p class="sys-intro">Profiles, lifecycle, and segmentation in one place. Every system reads and writes to the same customer record.</p>
+            <ul>
+              <li>Unified profiles</li>
+              <li>Real-time lifecycle state</li>
+              <li>Flexible segmentation</li>
+              <li>Shared across every system</li>
+            </ul>
+            <a class="sys-cta" href="#">Explore customers</a>
+            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Customers</span></div>
+          </article>
+
+          <article class="sys-chapter" id="sys-billing">
+            <h3>Turn usage into revenue</h3>
+            <p class="sys-intro">Define pricing once. Subscriptions, invoices, and revenue all flow through the same system.</p>
+            <ul>
+              <li>Plans and pricing</li>
+              <li>Subscriptions and billing</li>
+              <li>Invoices and payments</li>
+              <li>Revenue tracking</li>
+            </ul>
+            <a class="sys-cta" href="#">Explore billing</a>
+            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Billing</span></div>
+          </article>
+
+          <article class="sys-chapter" id="sys-messaging">
+            <h3>Reach users across every surface</h3>
+            <p class="sys-intro">Email, in-app, and lifecycle messaging. Triggered by real product events.</p>
+            <ul>
+              <li>Lifecycle campaigns</li>
+              <li>In-app messaging</li>
+              <li>Event-based triggers</li>
+              <li>Unified user context</li>
+            </ul>
+            <a class="sys-cta" href="#">Explore messaging</a>
+            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Email + messaging</span></div>
+          </article>
+
+          <article class="sys-chapter" id="sys-analytics">
+            <h3>See how everything connects</h3>
+            <p class="sys-intro">Track acquisition, retention, and revenue. No stitching tools together.</p>
+            <ul>
+              <li>Product and revenue metrics</li>
+              <li>Funnel and retention analysis</li>
+              <li>Real-time events</li>
+              <li>Shared data model</li>
+            </ul>
+            <a class="sys-cta" href="#">Explore analytics</a>
+            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Analytics</span></div>
+          </article>
+
+          <article class="sys-chapter" id="sys-automations">
+            <h3>Run your product on autopilot</h3>
+            <p class="sys-intro">Define workflows once. Trigger actions across every system.</p>
+            <ul>
+              <li>Event-based workflows</li>
+              <li>Cross-system triggers</li>
+              <li>Background jobs</li>
+              <li>Routing and logic</li>
+            </ul>
+            <a class="sys-cta" href="#">Explore automations</a>
+            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Automations</span></div>
+          </article>
+
+          <article class="sys-chapter" id="sys-sales">
+            <h3>Manage pipeline and conversion</h3>
+            <p class="sys-intro">Track leads, deals, and outcomes. Connected directly to your product data.</p>
+            <ul>
+              <li>Lead tracking</li>
+              <li>Pipeline management</li>
+              <li>Conversion tracking</li>
+              <li>Revenue attribution</li>
+            </ul>
+            <a class="sys-cta" href="#">Explore sales</a>
+            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Sales</span></div>
+          </article>
+
+          <article class="sys-chapter" id="sys-partnerships">
+            <h3>Grow through distribution</h3>
+            <p class="sys-intro">Manage referrals, affiliates, and partnerships built into your product.</p>
+            <ul>
+              <li>Referral programs</li>
+              <li>Affiliate tracking</li>
+              <li>Partner attribution</li>
+              <li>Revenue sharing</li>
+            </ul>
+            <a class="sys-cta" href="#">Explore partnerships</a>
+            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Partnerships</span></div>
+          </article>
+
+          <article class="sys-chapter" id="sys-support">
+            <h3>Support, built into your product</h3>
+            <p class="sys-intro">Handle tickets and user requests with full context.</p>
+            <ul>
+              <li>Ticketing</li>
+              <li>Help workflows</li>
+              <li>User context</li>
+              <li>Response tracking</li>
+            </ul>
+            <a class="sys-cta" href="#">Explore support</a>
+            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Support</span></div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 6. How it works ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <h2>Less setup. More building.</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <h3>Define your product once</h3>
+          <p>Customers, pricing, and flows.<br>Everything starts from the same source of truth.</p>
+        </div>
+        <div class="step">
+          <h3>Everything works together by default</h3>
+          <p>Billing, messaging, and analytics stay in sync.<br>No integrations. No data drift.</p>
+        </div>
+        <div class="step">
+          <h3>AI works across your product</h3>
+          <p>Insights, automation, and actions built in.<br>Not bolted on.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 7. Built for ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Built for</span>
+        <h2>Built for modern teams</h2>
+      </div>
+      <div class="built-for-grid">
+        <div class="card"><h3>Builders</h3><p>Ship and scale AI apps.</p></div>
+        <div class="card"><h3>Operators</h3><p>Drive revenue and retention.</p></div>
+        <div class="card"><h3>Developers</h3><p>Wire everything together.</p></div>
+        <div class="card"><h3>Marketers</h3><p>Run lifecycle and campaigns.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 8. Customer story ═══ -->
+  <section>
+    <div class="container">
+      <div class="story">
+        <div class="story-media" aria-hidden="true"></div>
+        <div class="story-copy">
+          <span class="eyebrow">Built with Mantle</span>
+          <h2>How TXTCart drove $131K in referral revenue</h2>
+          <a class="link-arrow" href="#">Read the story</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 9. Platforms ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Platforms</span>
+        <h2>Works with how you build</h2>
+      </div>
+      <div class="platforms-grid">
+        <div class="card"><h3>Shopify apps</h3><p>Commerce, subscriptions, and growth.</p></div>
+        <div class="card"><h3>AI-built apps</h3><p>Lovable, Base44, and beyond.</p></div>
+        <div class="card"><h3>Web apps</h3><p>Custom products and platforms.</p></div>
+        <div class="card"><h3>Mobile apps</h3><p>iOS and Android experiences.</p></div>
+      </div>
+      <div class="cards-footer">
+        <a class="link-arrow" href="#">See all platforms</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Developer experience ═══ -->
+  <section class="dev-section">
+    <div class="container">
+      <h2>Less setup. Less stack. More shipping.</h2>
+      <div class="dev-grid">
+        <div class="dev-col">
+          <h3>SDK + API</h3>
+          <p>Install Mantle and start building with a unified API. Customers, billing, messaging, and analytics in one place.</p>
+          <div class="dev-visual">
+            <div class="dev-code">
+              <span><span class="dev-code-cmd">npm</span> <span class="dev-code-text">install @heymantle/client</span></span>
+              <button class="dev-code-copy" aria-label="Copy command">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="dev-col">
+          <h3>Integrations</h3>
+          <p>Connect Shopify, Stripe, HubSpot, and more. Your data flows into one shared system.</p>
+          <div class="dev-visual">
+            <div class="dev-logos" aria-hidden="true">
+              <span class="dev-logo">Sp</span>
+              <span class="dev-logo">St</span>
+              <span class="dev-logo">Hb</span>
+              <span class="dev-logo">Sg</span>
+              <span class="dev-logo">In</span>
+            </div>
+          </div>
+        </div>
+        <div class="dev-col">
+          <h3>MCPs</h3>
+          <p>Query data, trigger actions, and automate workflows. AI that works directly on your product.</p>
+          <div class="dev-visual">
+            <div class="dev-logos" aria-hidden="true">
+              <span class="dev-logo">Cs</span>
+              <span class="dev-logo">Cc</span>
+              <span class="dev-logo">v0</span>
+              <span class="dev-logo">Lv</span>
+              <span class="dev-logo">Vs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 10. Closing ═══ -->
+  <section class="closing">
+    <div class="container">
+      <span class="eyebrow">Start building with Mantle</span>
+      <h2>Run your product on one platform</h2>
+      <p class="lead">Keep everything connected.</p>
+      <a class="btn btn-primary" href="#">
+        Get started for free
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <script>
+    (function() {
+      const pin = document.querySelector('.cases-pin');
+      const track = document.querySelector('.cases-track');
+      if (!pin || !track) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      let distance = 0;
+      let rafId = null;
+
+      const measure = () => {
+        const trackWidth = track.scrollWidth;
+        const vw = window.innerWidth;
+        distance = Math.max(0, trackWidth - vw);
+        pin.style.height = (window.innerHeight + distance) + 'px';
+      };
+
+      const update = () => {
+        rafId = null;
+        if (distance <= 0) {
+          track.style.transform = '';
+          return;
+        }
+        const rect = pin.getBoundingClientRect();
+        const progress = Math.max(0, Math.min(1, -rect.top / distance));
+        track.style.transform = 'translate3d(' + (-progress * distance) + 'px, 0, 0)';
+      };
+
+      const onScroll = () => {
+        if (rafId == null) rafId = requestAnimationFrame(update);
+      };
+
+      const onResize = () => {
+        measure();
+        if (rafId == null) rafId = requestAnimationFrame(update);
+      };
+
+      measure();
+      update();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onResize);
+    })();
+
+    (function() {
+      const chapters = Array.from(document.querySelectorAll('.sys-chapter'));
+      const links = Array.from(document.querySelectorAll('.sys-index-item'));
+      if (!chapters.length || !links.length) return;
+      const byId = Object.fromEntries(links.map(l => [l.dataset.target, l]));
+      const io = new IntersectionObserver((entries) => {
+        const inView = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => a.target.getBoundingClientRect().top - b.target.getBoundingClientRect().top);
+        if (inView.length) {
+          const id = inView[0].target.id;
+          links.forEach(l => l.classList.remove('active'));
+          if (byId[id]) byId[id].classList.add('active');
+        }
+      }, { rootMargin: '-25% 0px -55% 0px', threshold: 0 });
+      chapters.forEach(c => io.observe(c));
+    })();
+  </script>
+
+  <!-- ═══ Footer ═══ -->
+  <footer class="site-footer">
+    <div class="container inner">
+      <span>© 2026 Mantle</span>
+      <span>hello@heymantle.com</span>
+    </div>
+  </footer>
+
+</body>
+</html>
