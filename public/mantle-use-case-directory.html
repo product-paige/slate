@@ -1115,6 +1115,38 @@
       border-color: rgba(255, 255, 255, 0.22);
     }
 
+    .feature-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .feature-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 22px;
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      color: var(--text-primary);
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+    }
+    .feature-card:hover {
+      background: var(--surface-raised);
+      border-color: var(--border);
+    }
+    .feature-card:hover .feature-card-arrow { color: var(--text-primary); transform: translate(2px, -2px); }
+    .feature-card-title { font-size: 16px; font-weight: 500; letter-spacing: -0.005em; }
+    .feature-card-arrow {
+      width: 18px; height: 18px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+    }
+
     .uc-section {
       padding: var(--s-6) 0;
       border-top: 1px solid var(--border-soft);
@@ -2401,270 +2433,33 @@
         </div>
 
         <header class="uc-hero">
-          <h1 class="uc-title">Every customer in one profile — connected to every system you run</h1>
-          <p class="uc-sub">Unified profiles, real-time lifecycle tracking, and flexible segmentation. The source of truth for every user.</p>
-          <div class="uc-cta-row">
-            <a class="btn btn-primary">Get started for free <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
-            <a class="btn btn-ghost">View setup guide <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
-          </div>
+          <h1 class="uc-title">Customers features</h1>
+          <p class="uc-sub">Every capability the Customers system offers, each with its own deep-dive page.</p>
         </header>
 
-        <!-- From signup → loyal customer -->
         <section class="uc-section">
-          <h2 class="uc-h2">From signup → loyal customer</h2>
-          <p class="uc-h2-sub">Four phases, one system.</p>
-          <div class="uc-step-grid">
-            <article class="uc-step">
-              <div class="uc-step-num">01 · Capture</div>
-              <div class="uc-step-title">Every user starts as a unified profile</div>
-              <ul class="uc-step-list">
-                <li>Automatic profile creation on signup</li>
-                <li>Dedupe across auth, email, and events</li>
-                <li>One record per real person</li>
-              </ul>
-            </article>
-            <article class="uc-step">
-              <div class="uc-step-num">02 · Enrich</div>
-              <div class="uc-step-title">Attach the data that matters</div>
-              <ul class="uc-step-list">
-                <li>Traits, attributes, and custom fields</li>
-                <li>Revenue, plan, and billing state</li>
-                <li>Event history from every system</li>
-              </ul>
-            </article>
-            <article class="uc-step">
-              <div class="uc-step-num">03 · Track</div>
-              <div class="uc-step-title">Watch the lifecycle in real time</div>
-              <ul class="uc-step-list">
-                <li>Signup → active → paid → churned</li>
-                <li>Automatic stage transitions</li>
-                <li>Time-to-value for every cohort</li>
-              </ul>
-            </article>
-            <article class="uc-step">
-              <div class="uc-step-num">04 · Segment</div>
-              <div class="uc-step-title">Group customers however you need</div>
-              <ul class="uc-step-list">
-                <li>Segment by any trait or behavior</li>
-                <li>Live updates as users qualify</li>
-                <li>Power messaging, offers, and flows</li>
-              </ul>
-            </article>
-          </div>
-        </section>
-
-        <!-- Real workflows -->
-        <section class="uc-section">
-          <h2 class="uc-h2">Real workflows</h2>
-          <p class="uc-h2-sub">From first signup to ongoing retention.</p>
-          <div class="uc-workflow">
-
-            <!-- Workflow 1 -->
-            <article class="uc-workflow-row">
-              <div class="uc-workflow-copy">
-                <h3>One profile per customer</h3>
-                <ul class="uc-workflow-features">
-                  <li class="uc-workflow-feature">
-                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    <div>
-                      <div class="uc-workflow-feature-title">Unified on signup</div>
-                      <div class="uc-workflow-feature-desc">Every new user becomes a single profile automatically — no ingestion pipelines, no duplicate records, no manual cleanup.</div>
-                    </div>
-                  </li>
-                  <li class="uc-workflow-feature">
-                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
-                    <div>
-                      <div class="uc-workflow-feature-title">Traits &amp; attributes</div>
-                      <div class="uc-workflow-feature-desc">Store any data you care about — plan, referrer, onboarding step — and query it anywhere in the product.</div>
-                    </div>
-                  </li>
-                  <li class="uc-workflow-feature">
-                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v4H4z"/><path d="M4 10h16v10H4z"/><path d="M8 14h4"/></svg>
-                    <div>
-                      <div class="uc-workflow-feature-title">Shared across systems</div>
-                      <div class="uc-workflow-feature-desc">Billing, messaging, analytics, and automations all read and write to the same customer record — no sync jobs.</div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="uc-workflow-visual">
-                <div class="uc-workflow-mock">
-                  <div class="uc-workflow-mock-head">
-                    <strong>Profile</strong>
-                    <div class="uc-workflow-mock-avatar"></div>
-                  </div>
-                  <div class="uc-workflow-mock-row"><span class="label">Email:</span><span class="val">sarah@acme.com</span></div>
-                  <div class="uc-workflow-mock-row"><span class="label">Lifecycle:</span><span class="uc-workflow-mock-badge">Active</span></div>
-                  <div class="uc-workflow-mock-row"><span class="label">Plan:</span><span class="val">Pro · monthly</span></div>
-                  <div class="uc-workflow-mock-row"><span class="label">LTV:</span><span class="val">$1,284</span></div>
-                  <div class="uc-workflow-mock-cta">
-                    <span class="uc-workflow-mock-cta-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></span>
-                    <span>View full profile</span>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Workflow 2 (reversed) -->
-            <article class="uc-workflow-row reverse">
-              <div class="uc-workflow-copy">
-                <h3>Real-time lifecycle tracking</h3>
-                <ul class="uc-workflow-features">
-                  <li class="uc-workflow-feature">
-                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m7 14 4-4 4 4 5-5"/></svg>
-                    <div>
-                      <div class="uc-workflow-feature-title">Stage transitions</div>
-                      <div class="uc-workflow-feature-desc">Customers move from new → active → paid → churned automatically, based on events that already flow through Mantle.</div>
-                    </div>
-                  </li>
-                  <li class="uc-workflow-feature">
-                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                    <div>
-                      <div class="uc-workflow-feature-title">Time-to-value</div>
-                      <div class="uc-workflow-feature-desc">Watch activation speed, upgrade latency, and retention curves without stitching together three separate tools.</div>
-                    </div>
-                  </li>
-                  <li class="uc-workflow-feature">
-                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
-                    <div>
-                      <div class="uc-workflow-feature-title">Live pulse</div>
-                      <div class="uc-workflow-feature-desc">Every state change streams in real time — perfect for triggering onboarding, win-back, or expansion moments.</div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="uc-workflow-visual">
-                <div class="uc-workflow-mock">
-                  <div class="uc-workflow-mock-head">
-                    <strong>Lifecycle</strong>
-                    <span class="uc-workflow-mock-badge">Live</span>
-                  </div>
-                  <div class="uc-workflow-mock-row"><span class="label">New</span><span class="val">412</span></div>
-                  <div class="uc-workflow-mock-row"><span class="label">Active</span><span class="val">1,248</span></div>
-                  <div class="uc-workflow-mock-row"><span class="label">Paid</span><span class="val">287</span></div>
-                  <div class="uc-workflow-mock-row"><span class="label">Churn risk</span><span class="val">34</span></div>
-                  <div class="uc-workflow-mock-cta">
-                    <span class="uc-workflow-mock-cta-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-                    <span>Explore cohorts</span>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Workflow 3 -->
-            <article class="uc-workflow-row">
-              <div class="uc-workflow-copy">
-                <h3>Flexible segmentation</h3>
-                <ul class="uc-workflow-features">
-                  <li class="uc-workflow-feature">
-                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><circle cx="17" cy="11" r="3"/><path d="M3 21v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1"/><path d="M17 21v-1a3 3 0 0 1 3-3h1"/></svg>
-                    <div>
-                      <div class="uc-workflow-feature-title">Any trait, any event</div>
-                      <div class="uc-workflow-feature-desc">Build segments from any attribute or behavior — "signed up last 7 days," "hit paywall twice," "never opened the app."</div>
-                    </div>
-                  </li>
-                  <li class="uc-workflow-feature">
-                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                    <div>
-                      <div class="uc-workflow-feature-title">Power every surface</div>
-                      <div class="uc-workflow-feature-desc">Point segments at campaigns, in-app messages, pricing experiments, or automations — no glue code required.</div>
-                    </div>
-                  </li>
-                  <li class="uc-workflow-feature">
-                    <svg class="uc-workflow-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/><path d="M3 12h18"/><path d="M12 3a14.5 14.5 0 0 1 0 18"/><path d="M12 3a14.5 14.5 0 0 0 0 18"/></svg>
-                    <div>
-                      <div class="uc-workflow-feature-title">Always live</div>
-                      <div class="uc-workflow-feature-desc">Segments update in real time as users qualify or drop out — your messaging always hits the right audience.</div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="uc-workflow-visual">
-                <div class="uc-workflow-mock">
-                  <div class="uc-workflow-mock-head">
-                    <strong>Segment</strong>
-                    <span class="uc-workflow-mock-badge">Live</span>
-                  </div>
-                  <div class="uc-workflow-mock-row"><span class="label">Name:</span><span class="val">Paid · inactive 7d</span></div>
-                  <div class="uc-workflow-mock-row"><span class="label">Users:</span><span class="val">1,284</span></div>
-                  <div class="uc-workflow-mock-row"><span class="label">Rule:</span><span class="val">plan = pro</span></div>
-                  <div class="uc-workflow-mock-row"><span class="label">And:</span><span class="val">last_seen &gt; 7d</span></div>
-                  <div class="uc-workflow-mock-cta">
-                    <span class="uc-workflow-mock-cta-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-                    <span>Send win-back campaign</span>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-          </div>
-        </section>
-
-        <!-- Setup guides -->
-        <section class="uc-section">
-          <h2 class="uc-h2">Setup guides</h2>
-          <p class="uc-h2-sub">Step-by-step walkthroughs from the team.</p>
-          <div class="uc-guides">
-            <a class="uc-guide"><span class="uc-guide-title">How to set up customer profiles</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
-            <a class="uc-guide"><span class="uc-guide-title">How to define custom traits and attributes</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
-            <a class="uc-guide"><span class="uc-guide-title">How to map your lifecycle stages</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
-            <a class="uc-guide"><span class="uc-guide-title">How to build your first segment</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
-            <a class="uc-guide"><span class="uc-guide-title">How to sync attributes from your app</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
-            <a class="uc-guide"><span class="uc-guide-title">How to track churn and win-back opportunities</span><svg class="uc-guide-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
-          </div>
-        </section>
-
-        <!-- Powered by Mantle -->
-        <section class="uc-section">
-          <h2 class="uc-h2">Connected to every other system</h2>
-          <p class="uc-h2-sub">Customers is the source of truth that ties it all together.</p>
-          <div class="uc-pillars">
-            <a class="uc-pillar" data-nav="systems">
-              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <rect width="20" height="14" x="2" y="5" rx="2"/>
-                <line x1="2" x2="22" y1="10" y2="10"/>
-              </svg>
-              <div class="uc-pillar-title">Billing</div>
-              <div class="uc-pillar-desc">Every subscription and payment ties back to a customer.</div>
+          <div class="feature-card-grid">
+            <a class="feature-card" href="mantle-customer-profiles.html">
+              <span class="feature-card-title">Create and manage customer profiles</span>
+              <svg class="feature-card-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13 L13 3"/><path d="M5 3h8v8"/></svg>
             </a>
-            <a class="uc-pillar" data-nav="systems">
-              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <rect width="20" height="16" x="2" y="4" rx="2"/>
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-              </svg>
-              <div class="uc-pillar-title">Messaging</div>
-              <div class="uc-pillar-desc">Target segments with lifecycle and campaign sends.</div>
+            <a class="feature-card" href="mantle-customer-data.html">
+              <span class="feature-card-title">Store customer data and attributes</span>
+              <svg class="feature-card-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13 L13 3"/><path d="M5 3h8v8"/></svg>
             </a>
-            <a class="uc-pillar" data-nav="systems">
-              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
-                <path d="m19 9-5 5-4-4-3 3"/>
-              </svg>
-              <div class="uc-pillar-title">Analytics</div>
-              <div class="uc-pillar-desc">Track conversion, retention, and LTV per cohort.</div>
+            <a class="feature-card" href="mantle-customer-lifecycle.html">
+              <span class="feature-card-title">Track lifecycle (signup → paid)</span>
+              <svg class="feature-card-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13 L13 3"/><path d="M5 3h8v8"/></svg>
             </a>
-            <a class="uc-pillar" data-nav="systems">
-              <svg class="uc-pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9.5 8 5 12l4.5 4"/>
-                <path d="m14.5 8 4.5 4-4.5 4"/>
-                <path d="M13 4 11 20"/>
-              </svg>
-              <div class="uc-pillar-title">Automations</div>
-              <div class="uc-pillar-desc">Trigger workflows on lifecycle or behavioral events.</div>
+            <a class="feature-card" href="mantle-customer-segments.html">
+              <span class="feature-card-title">Segment users</span>
+              <svg class="feature-card-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13 L13 3"/><path d="M5 3h8v8"/></svg>
             </a>
           </div>
-        </section>
-
-        <!-- Final CTA -->
-        <section class="uc-final-cta">
-          <h2>Put every customer in one place</h2>
-          <p>Unified profiles, real-time lifecycle, and flexible segmentation — all powered by the same system.</p>
-          <a class="btn btn-primary">Get started for free <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
         </section>
       </div>
     </section>
 
-    <!-- ═══════════ PAGE: Use case — Launch your app ═══════════ -->
     <section class="page" data-page="launch-app" data-layout="wide">
       <div class="uc-container">
         <div class="breadcrumb">
