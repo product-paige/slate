@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mantle — Run your product on one platform</title>
+  <title>Mantle — Customer case studies</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -1249,6 +1249,174 @@
       .hero-ctas { flex-direction: column; }
     }
   </style>
+  <style>
+    /* Case study page specifics */
+    .cs-hero { padding: 100px 0 60px; text-align: center; }
+    .cs-hero h1 { max-width: 900px; margin: 0 auto 20px; }
+    .cs-hero p.lead {
+      font-size: 20px;
+      color: var(--text-muted);
+      max-width: 620px;
+      margin: 0 auto 40px;
+      line-height: 1.5;
+    }
+    .cs-proof-strip {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px 32px;
+      padding: 20px 0 80px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .cs-proof-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      font-size: 14px;
+    }
+    .cs-proof-chip strong { color: var(--gold-high); font-family: var(--font-head); font-weight: 500; }
+    .cs-proof-chip span { color: var(--text-muted); }
+
+    .cs-featured {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .cs-featured-media {
+      aspect-ratio: 4 / 3;
+      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      background:
+        radial-gradient(circle at 30% 35%, rgba(255,187,83,0.09), transparent 55%),
+        radial-gradient(circle at 75% 70%, rgba(140,95,210,0.18), transparent 55%),
+        linear-gradient(135deg, #1a1520 0%, #110e15 100%);
+    }
+    .cs-featured-copy .eyebrow { margin-bottom: 20px; }
+    .cs-featured-copy h2 { font-size: 44px; line-height: 1.1; margin-bottom: 12px; letter-spacing: -0.024em; font-weight: 400; }
+    .cs-featured-copy .cs-customer { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+    .cs-featured-copy p { font-size: 16px; color: var(--text-muted); margin-bottom: 32px; line-height: 1.55; }
+
+    .cs-results {
+      padding: 120px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .cs-results .section-head { text-align: center; max-width: 680px; margin: 0 auto 64px; }
+    .cs-results .section-head h2 { margin-bottom: 12px; }
+    .cs-results .section-head .eyebrow { display: inline-flex; margin-bottom: 20px; }
+    .cs-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--border-soft);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 36px 0;
+    }
+    .cs-stat { padding: 0 32px; border-left: 1px solid var(--border-soft); display: flex; flex-direction: column; gap: 6px; }
+    .cs-stat:first-child { border-left: none; padding-left: 0; }
+    .cs-stat .big { font-family: var(--font-head); font-size: 40px; font-weight: 500; color: var(--text-primary); letter-spacing: -0.024em; line-height: 1.05; }
+    .cs-stat .sub { font-size: 13px; color: var(--text-muted); }
+
+    .cs-stories {
+      padding: 120px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .cs-stories .section-head { margin-bottom: 56px; }
+    .cs-story-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .cs-story {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 32px;
+      background: var(--canvas);
+      color: inherit;
+      text-decoration: none;
+      transition: background var(--t-fast) var(--ease);
+    }
+    .cs-story:hover { background: var(--surface); }
+    .cs-story-logo {
+      font-family: var(--font-head);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: -0.01em;
+    }
+    .cs-story-result {
+      font-family: var(--font-head);
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.024em;
+      line-height: 1.1;
+    }
+    .cs-story-summary { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+    .cs-story-cta { margin-top: auto; font-size: 13px; font-weight: 500; color: var(--gold-high); display: inline-flex; align-items: center; gap: 6px; }
+    .cs-story-cta::after { content: "→"; transition: transform var(--t-fast) var(--ease); }
+    .cs-story:hover .cs-story-cta::after { transform: translateX(3px); }
+
+    .cs-how {
+      padding: 120px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .cs-how .section-head { margin-bottom: 48px; }
+    .cs-how-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .cs-how-card {
+      padding: 24px;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .cs-how-card .kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold-high);
+      margin-bottom: 10px;
+    }
+    .cs-how-card .title { font-family: var(--font-head); font-size: 18px; font-weight: 500; color: var(--text-primary); }
+
+    .cs-quote { padding: 140px 0; text-align: center; }
+    .cs-quote blockquote {
+      max-width: 900px;
+      margin: 0 auto 28px;
+      font-family: var(--font-head);
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    .cs-quote cite { font-style: normal; font-size: 14px; color: var(--text-muted); }
+
+    @media (max-width: 960px) {
+      .cs-featured { grid-template-columns: 1fr; }
+      .cs-stat-grid { grid-template-columns: 1fr 1fr; gap: 24px 0; padding: 24px 0; }
+      .cs-stat { padding: 0 16px; }
+      .cs-stat:nth-child(odd) { border-left: none; padding-left: 0; }
+      .cs-story-grid, .cs-how-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
 </head>
 <body>
 
@@ -1422,491 +1590,139 @@
     </div>
   </header>
 
-  <!-- ═══ 1. Hero ═══ -->
-  <section class="hero">
+
+  <!-- ═══ Hero ═══ -->
+  <section class="cs-hero">
     <div class="container">
-      <h1>You built the app.<br>Mantle runs the business.</h1>
-      <p class="lead">Run your entire product on one platform. Customers, billing, messaging, and analytics — all connected by default.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-primary" href="#">
-          Get started for free
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </a>
-        <a class="btn btn-ghost" href="#">
-          View docs
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
-        </a>
-      </div>
-      <div class="hero-visual" aria-hidden="true"></div>
-      <div class="integrations-inner">
-        <p class="integrations-label">Mantle integrates seamlessly with your favorite app-building tools</p>
-        <div class="integrations-logos">
-          <a class="integrations-logo" href="#">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4h8v8H4zM12 12h8v8h-8z"/></svg>
-            Replit
-          </a>
-          <a class="integrations-logo" href="#">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/></svg>
-            Base 44
-          </a>
-          <a class="integrations-logo" href="#">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7-5-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-7 11-7 11h-4z" opacity=".9"/></svg>
-            Lovable
-          </a>
-          <a class="integrations-logo" href="#">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="12" r="4"/></svg>
-            Rork
-          </a>
-          <a class="integrations-logo" href="#">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2v7M12 15v7M2 12h7M15 12h7M5 5l4.9 4.9M14.1 14.1 19 19M5 19l4.9-4.9M14.1 9.9 19 5"/></svg>
-            Claude
-          </a>
-        </div>
-      </div>
+      <h1>We help app teams make more money.</h1>
+      <p class="lead">Real results from teams using Mantle.</p>
     </div>
   </section>
 
-  <!-- ═══ 2. What Mantle is ═══ -->
-  <section id="platform">
-    <div class="container">
-      <div class="what-statement">
-        <h2>
-          <span>AI made building easy. Turning it into a real business is still hard. Most products are stitched together. Mantle isn't.</span>
-          <span class="muted">Customers, billing, messaging, and analytics — all connected from day one.</span>
-        </h2>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ 3. Proof ═══ -->
-  <section class="proof">
-    <div class="container">
-      <div class="proof-inner">
-        <span class="proof-label">Customers powered by Mantle</span>
-        <div class="proof-logos" aria-hidden="true">
-          <div class="proof-logo"></div>
-          <div class="proof-logo"></div>
-          <div class="proof-logo"></div>
-          <div class="proof-logo"></div>
-          <div class="proof-logo"></div>
-        </div>
-        <div class="proof-stats">
-          <div class="proof-stat">
-            <span class="big">$131K</span>
-            <span class="sub">in referral revenue generated</span>
-          </div>
-          <div class="proof-stat">
-            <span class="big">32,045</span>
-            <span class="sub">lifecycle emails sent</span>
-          </div>
-          <div class="proof-stat">
-            <span class="big">45%</span>
-            <span class="sub">average revenue lift</span>
-          </div>
-          <div class="proof-stat">
-            <span class="big">2.4M</span>
-            <span class="sub">customers managed</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ 4. Use cases ═══ -->
-  <section id="use-cases">
-    <div class="cases-pin">
-      <div class="cases-sticky">
-        <div class="section-head">
-          <span class="eyebrow">Use cases</span>
-          <h2>Everything you need to turn your app into revenue</h2>
-        </div>
-        <div class="cases-track">
-        <a class="case" href="#">
-          <div class="case-visual" aria-hidden="true"></div>
-          <div class="case-body">
-            <h3>Launch your app</h3>
-            <p>Ship a production-ready product from day one.</p>
-            <span class="case-more">Learn more</span>
-          </div>
-        </a>
-        <a class="case" href="#">
-          <div class="case-visual" aria-hidden="true"></div>
-          <div class="case-body">
-            <h3>Monetize your product</h3>
-            <p>Turn usage into revenue with built-in pricing and billing.</p>
-            <span class="case-more">Learn more</span>
-          </div>
-        </a>
-        <a class="case" href="#">
-          <div class="case-visual" aria-hidden="true"></div>
-          <div class="case-body">
-            <h3>Onboard and activate users</h3>
-            <p>Guide users to their first value, faster.</p>
-            <span class="case-more">Learn more</span>
-          </div>
-        </a>
-        <a class="case" href="#">
-          <div class="case-visual" aria-hidden="true"></div>
-          <div class="case-body">
-            <h3>Engage and retain users</h3>
-            <p>Run lifecycle messaging across every surface.</p>
-            <span class="case-more">Learn more</span>
-          </div>
-        </a>
-        <a class="case" href="#">
-          <div class="case-visual" aria-hidden="true"></div>
-          <div class="case-body">
-            <h3>Understand your data</h3>
-            <p>See how everything connects, in real time.</p>
-            <span class="case-more">Learn more</span>
-          </div>
-        </a>
-        <a class="case" href="#">
-          <div class="case-visual" aria-hidden="true"></div>
-          <div class="case-body">
-            <h3>Grow your app</h3>
-            <p>Experiment, optimize, and scale with confidence.</p>
-            <span class="case-more">Learn more</span>
-          </div>
-        </a>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <div class="cases-footer">
-        <a class="btn btn-ghost" href="#">View all use cases</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ 5. Systems (editorial) ═══ -->
-  <section id="systems" class="sys-section">
-    <div class="container">
-      <div class="sys-head">
-        <h2>Eight systems. One platform. All connected by Mantle AI.</h2>
-      </div>
-
-      <div class="sys-layout">
-        <!-- Sticky left index -->
-        <aside class="sys-index" aria-label="Systems index">
-          <ul class="sys-index-list">
-            <li><a href="#sys-customers"    class="sys-index-item active" data-target="sys-customers">Customers</a></li>
-            <li><a href="#sys-billing"      class="sys-index-item" data-target="sys-billing">Billing</a></li>
-            <li><a href="#sys-messaging"    class="sys-index-item" data-target="sys-messaging">Email + messaging</a></li>
-            <li><a href="#sys-analytics"    class="sys-index-item" data-target="sys-analytics">Analytics</a></li>
-            <li><a href="#sys-automations"  class="sys-index-item" data-target="sys-automations">Automations</a></li>
-            <li><a href="#sys-sales"        class="sys-index-item" data-target="sys-sales">Sales</a></li>
-            <li><a href="#sys-partnerships" class="sys-index-item" data-target="sys-partnerships">Partnerships</a></li>
-            <li><a href="#sys-support"      class="sys-index-item" data-target="sys-support">Support</a></li>
-          </ul>
-        </aside>
-
-        <!-- Right chapters -->
-        <div class="sys-chapters">
-
-          <article class="sys-chapter" id="sys-customers">
-            <h3>The source of truth for every user</h3>
-            <p class="sys-intro">Profiles, lifecycle, and segmentation in one place. Every system reads and writes to the same customer record.</p>
-            <ul>
-              <li>Unified profiles</li>
-              <li>Real-time lifecycle state</li>
-              <li>Flexible segmentation</li>
-              <li>Shared across every system</li>
-            </ul>
-            <a class="sys-cta" href="#">Explore customers</a>
-            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Customers</span></div>
-          </article>
-
-          <article class="sys-chapter" id="sys-billing">
-            <h3>Turn usage into revenue</h3>
-            <p class="sys-intro">Define pricing once. Subscriptions, invoices, and revenue all flow through the same system.</p>
-            <ul>
-              <li>Plans and pricing</li>
-              <li>Subscriptions and billing</li>
-              <li>Invoices and payments</li>
-              <li>Revenue tracking</li>
-            </ul>
-            <a class="sys-cta" href="#">Explore billing</a>
-            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Billing</span></div>
-          </article>
-
-          <article class="sys-chapter" id="sys-messaging">
-            <h3>Reach users across every surface</h3>
-            <p class="sys-intro">Email, in-app, and lifecycle messaging. Triggered by real product events.</p>
-            <ul>
-              <li>Lifecycle campaigns</li>
-              <li>In-app messaging</li>
-              <li>Event-based triggers</li>
-              <li>Unified user context</li>
-            </ul>
-            <a class="sys-cta" href="#">Explore messaging</a>
-            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Email + messaging</span></div>
-          </article>
-
-          <article class="sys-chapter" id="sys-analytics">
-            <h3>See how everything connects</h3>
-            <p class="sys-intro">Track acquisition, retention, and revenue. No stitching tools together.</p>
-            <ul>
-              <li>Product and revenue metrics</li>
-              <li>Funnel and retention analysis</li>
-              <li>Real-time events</li>
-              <li>Shared data model</li>
-            </ul>
-            <a class="sys-cta" href="#">Explore analytics</a>
-            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Analytics</span></div>
-          </article>
-
-          <article class="sys-chapter" id="sys-automations">
-            <h3>Run your product on autopilot</h3>
-            <p class="sys-intro">Define workflows once. Trigger actions across every system.</p>
-            <ul>
-              <li>Event-based workflows</li>
-              <li>Cross-system triggers</li>
-              <li>Background jobs</li>
-              <li>Routing and logic</li>
-            </ul>
-            <a class="sys-cta" href="#">Explore automations</a>
-            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Automations</span></div>
-          </article>
-
-          <article class="sys-chapter" id="sys-sales">
-            <h3>Manage pipeline and conversion</h3>
-            <p class="sys-intro">Track leads, deals, and outcomes. Connected directly to your product data.</p>
-            <ul>
-              <li>Lead tracking</li>
-              <li>Pipeline management</li>
-              <li>Conversion tracking</li>
-              <li>Revenue attribution</li>
-            </ul>
-            <a class="sys-cta" href="#">Explore sales</a>
-            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Sales</span></div>
-          </article>
-
-          <article class="sys-chapter" id="sys-partnerships">
-            <h3>Grow through distribution</h3>
-            <p class="sys-intro">Manage referrals, affiliates, and partnerships built into your product.</p>
-            <ul>
-              <li>Referral programs</li>
-              <li>Affiliate tracking</li>
-              <li>Partner attribution</li>
-              <li>Revenue sharing</li>
-            </ul>
-            <a class="sys-cta" href="#">Explore partnerships</a>
-            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Partnerships</span></div>
-          </article>
-
-          <article class="sys-chapter" id="sys-support">
-            <h3>Support, built into your product</h3>
-            <p class="sys-intro">Handle tickets and user requests with full context.</p>
-            <ul>
-              <li>Ticketing</li>
-              <li>Help workflows</li>
-              <li>User context</li>
-              <li>Response tracking</li>
-            </ul>
-            <a class="sys-cta" href="#">Explore support</a>
-            <div class="sys-chapter-media" aria-hidden="true"><span class="sys-chapter-media-label">Support</span></div>
-          </article>
-
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ 6. How it works ═══ -->
+  <!-- ═══ Proof strip ═══ -->
   <section>
+    <div class="container">
+      <div class="cs-proof-strip">
+        <div class="cs-proof-chip"><strong>$131K</strong><span>referral revenue — TXTCart</span></div>
+        <div class="cs-proof-chip"><strong>32,045</strong><span>lifecycle emails sent</span></div>
+        <div class="cs-proof-chip"><strong>45%</strong><span>average revenue lift</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Featured case study ═══ -->
+  <section>
+    <div class="container">
+      <div class="cs-featured">
+        <div class="cs-featured-media" aria-hidden="true"></div>
+        <div class="cs-featured-copy">
+          <span class="eyebrow">Featured case study</span>
+          <div class="cs-customer">TXTCart</div>
+          <h2>$131K in referral revenue with Mantle</h2>
+          <p>How TXTCart turned referrals into a repeatable revenue channel — without a dedicated growth team.</p>
+          <a class="btn btn-primary" href="#">
+            Read case study
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Results grid ═══ -->
+  <section class="cs-results">
     <div class="container">
       <div class="section-head">
-        <h2>Less setup. More building.</h2>
+        <span class="eyebrow">Results</span>
+        <h2>Outcomes teams shipped with Mantle</h2>
       </div>
-      <div class="steps">
-        <div class="step">
-          <h3>Define your product once</h3>
-          <p>Customers, pricing, and flows.<br>Everything starts from the same source of truth.</p>
+      <div class="cs-stat-grid">
+        <div class="cs-stat">
+          <span class="big">$131K</span>
+          <span class="sub">referral revenue generated</span>
         </div>
-        <div class="step">
-          <h3>Everything works together by default</h3>
-          <p>Billing, messaging, and analytics stay in sync.<br>No integrations. No data drift.</p>
+        <div class="cs-stat">
+          <span class="big">45%</span>
+          <span class="sub">increase in conversion</span>
         </div>
-        <div class="step">
-          <h3>AI works across your product</h3>
-          <p>Insights, automation, and actions built in.<br>Not bolted on.</p>
+        <div class="cs-stat">
+          <span class="big">38%</span>
+          <span class="sub">improvement in retention</span>
+        </div>
+        <div class="cs-stat">
+          <span class="big">120+</span>
+          <span class="sub">workflows automated</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ 7. Built for ═══ -->
-  <section>
+  <!-- ═══ Case study cards ═══ -->
+  <section class="cs-stories">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Built for</span>
-        <h2>Built for modern teams</h2>
+        <span class="eyebrow">Case studies</span>
+        <h2>Outcome-first stories from the teams using Mantle</h2>
       </div>
-      <div class="built-for-grid">
-        <div class="card"><h3>Builders</h3><p>Ship and scale AI apps.</p></div>
-        <div class="card"><h3>Operators</h3><p>Drive revenue and retention.</p></div>
-        <div class="card"><h3>Developers</h3><p>Wire everything together.</p></div>
-        <div class="card"><h3>Marketers</h3><p>Run lifecycle and campaigns.</p></div>
+      <div class="cs-story-grid">
+        <a class="cs-story" href="#">
+          <div class="cs-story-logo">TXTCart</div>
+          <div class="cs-story-result">$131K in referral revenue</div>
+          <div class="cs-story-summary">Turned referrals into a scalable growth channel — all on one platform, no ops overhead.</div>
+          <span class="cs-story-cta">Read case study</span>
+        </a>
+        <a class="cs-story" href="#">
+          <div class="cs-story-logo">Customer story</div>
+          <div class="cs-story-result">45% lift in conversion</div>
+          <div class="cs-story-summary">Moved lifecycle messaging in-product and saw activation climb in the first month.</div>
+          <span class="cs-story-cta">Read case study</span>
+        </a>
+        <a class="cs-story" href="#">
+          <div class="cs-story-logo">Customer story</div>
+          <div class="cs-story-result">38% retention gain</div>
+          <div class="cs-story-summary">Unified customers, billing, and messaging to recover churn before it happened.</div>
+          <span class="cs-story-cta">Read case study</span>
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- ═══ 8. Customer story ═══ -->
-  <section>
-    <div class="container">
-      <div class="story">
-        <div class="story-media" aria-hidden="true"></div>
-        <div class="story-copy">
-          <span class="eyebrow">Built with Mantle</span>
-          <h2>How TXTCart drove $131K in referral revenue</h2>
-          <a class="link-arrow" href="#">Read the story</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ 9. Platforms ═══ -->
-  <section>
+  <!-- ═══ How they did it ═══ -->
+  <section class="cs-how">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Platforms</span>
-        <h2>Works with how you build</h2>
+        <span class="eyebrow">Built with Mantle</span>
+        <h2>How they did it</h2>
       </div>
-      <div class="platforms-grid">
-        <div class="card"><h3>Shopify apps</h3><p>Commerce, subscriptions, and growth.</p></div>
-        <div class="card"><h3>AI-built apps</h3><p>Lovable, Base44, and beyond.</p></div>
-        <div class="card"><h3>Web apps</h3><p>Custom products and platforms.</p></div>
-        <div class="card"><h3>Mobile apps</h3><p>iOS and Android experiences.</p></div>
-      </div>
-      <div class="cards-footer">
-        <a class="link-arrow" href="#">See all platforms</a>
+      <div class="cs-how-grid">
+        <div class="cs-how-card"><div class="kicker">Customers</div><div class="title">Segmentation</div></div>
+        <div class="cs-how-card"><div class="kicker">Messaging</div><div class="title">Lifecycle campaigns</div></div>
+        <div class="cs-how-card"><div class="kicker">Partnerships</div><div class="title">Referral tracking</div></div>
+        <div class="cs-how-card"><div class="kicker">Automations</div><div class="title">Reward flows</div></div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ Developer experience ═══ -->
-  <section class="dev-section">
+  <!-- ═══ Quote ═══ -->
+  <section class="cs-quote">
     <div class="container">
-      <h2>Less setup. Less stack. More shipping.</h2>
-      <div class="dev-grid">
-        <div class="dev-col">
-          <h3>SDK + API</h3>
-          <p>Install Mantle and start building with a unified API. Customers, billing, messaging, and analytics in one place.</p>
-          <div class="dev-visual">
-            <div class="dev-code">
-              <span><span class="dev-code-cmd">npm</span> <span class="dev-code-text">install @heymantle/client</span></span>
-              <button class="dev-code-copy" aria-label="Copy command">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="dev-col">
-          <h3>Integrations</h3>
-          <p>Connect Shopify, Stripe, HubSpot, and more. Your data flows into one shared system.</p>
-          <div class="dev-visual">
-            <div class="dev-logos" aria-hidden="true">
-              <span class="dev-logo">Sp</span>
-              <span class="dev-logo">St</span>
-              <span class="dev-logo">Hb</span>
-              <span class="dev-logo">Sg</span>
-              <span class="dev-logo">In</span>
-            </div>
-          </div>
-        </div>
-        <div class="dev-col">
-          <h3>MCPs</h3>
-          <p>Query data, trigger actions, and automate workflows. AI that works directly on your product.</p>
-          <div class="dev-visual">
-            <div class="dev-logos" aria-hidden="true">
-              <span class="dev-logo">Cs</span>
-              <span class="dev-logo">Cc</span>
-              <span class="dev-logo">v0</span>
-              <span class="dev-logo">Lv</span>
-              <span class="dev-logo">Vs</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <blockquote>“Mantle helped us turn referrals into a real revenue channel.”</blockquote>
+      <cite>— Founder, TXTCart</cite>
     </div>
   </section>
 
-  <!-- ═══ 10. Closing ═══ -->
+  <!-- ═══ Closing CTA ═══ -->
   <section class="closing">
     <div class="container">
       <span class="eyebrow">Start building with Mantle</span>
-      <h2>Run your product on one platform</h2>
-      <p class="lead">Keep everything connected.</p>
+      <h2>Run your app on one platform.<br/>AI works across it.</h2>
+      <p class="lead">Start for free — no credit card required.</p>
       <a class="btn btn-primary" href="#">
-        Get started for free
+        Start for free
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </a>
     </div>
   </section>
-
-  <script>
-    (function() {
-      const pin = document.querySelector('.cases-pin');
-      const track = document.querySelector('.cases-track');
-      if (!pin || !track) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      let distance = 0;
-      let rafId = null;
-
-      const measure = () => {
-        const trackWidth = track.scrollWidth;
-        const vw = window.innerWidth;
-        distance = Math.max(0, trackWidth - vw);
-        pin.style.height = (window.innerHeight + distance) + 'px';
-      };
-
-      const update = () => {
-        rafId = null;
-        if (distance <= 0) {
-          track.style.transform = '';
-          return;
-        }
-        const rect = pin.getBoundingClientRect();
-        const progress = Math.max(0, Math.min(1, -rect.top / distance));
-        track.style.transform = 'translate3d(' + (-progress * distance) + 'px, 0, 0)';
-      };
-
-      const onScroll = () => {
-        if (rafId == null) rafId = requestAnimationFrame(update);
-      };
-
-      const onResize = () => {
-        measure();
-        if (rafId == null) rafId = requestAnimationFrame(update);
-      };
-
-      measure();
-      update();
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onResize);
-    })();
-
-    (function() {
-      const chapters = Array.from(document.querySelectorAll('.sys-chapter'));
-      const links = Array.from(document.querySelectorAll('.sys-index-item'));
-      if (!chapters.length || !links.length) return;
-      const byId = Object.fromEntries(links.map(l => [l.dataset.target, l]));
-      const io = new IntersectionObserver((entries) => {
-        const inView = entries
-          .filter(e => e.isIntersecting)
-          .sort((a, b) => a.target.getBoundingClientRect().top - b.target.getBoundingClientRect().top);
-        if (inView.length) {
-          const id = inView[0].target.id;
-          links.forEach(l => l.classList.remove('active'));
-          if (byId[id]) byId[id].classList.add('active');
-        }
-      }, { rootMargin: '-25% 0px -55% 0px', threshold: 0 });
-      chapters.forEach(c => io.observe(c));
-    })();
-  </script>
-
   <!-- ═══ Footer ═══ -->
   <footer class="site-footer">
     <div class="container inner">
